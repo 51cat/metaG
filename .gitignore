@@ -1,6 +1,6 @@
 *metaG/lib*
 *__pycache__*
-*fa*
-*fasta*
+*.fa*
+*.fasta*
 *test*
 *egg-info*
