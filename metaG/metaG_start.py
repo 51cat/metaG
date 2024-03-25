@@ -24,9 +24,16 @@ def hostindex(host, fa, outdir):
     runner.run()
 
 @main.command()
-def QC():
+@click.option('--r1', required=True)
+@click.option('--r2', required=True)
+@click.option('--outdir', required=True)
+@click.option('--sample_name', required=True)
+def QC(r1, r2, outdir, sample_name):
     runner = QCfq(
-        
+        r1=r1,
+        r2=r2,
+        outdir=outdir,
+        sample_name=sample_name
     )
     runner.run()
 

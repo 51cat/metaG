@@ -11,10 +11,12 @@ class SoftInterface:
             work_dir:       str,
             path:           str = None,
             use:            str = "--" ,
+            env:            str = None ,
             **kwargs
             ) -> None:
         
         self.interpreter = interpreter
+        self.env = env
         
         if path is None:
             self.path = ""
@@ -38,6 +40,8 @@ class SoftInterface:
             else:
                 self.cmd_basic += f" {val}"
         self.cmd = self.cmd_basic
+        if self.env is not None:
+            self.cmd = f"source activate {self.env} && " + self.cmd
     
     def get_cmd(self):
         return self.cmd
