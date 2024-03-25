@@ -1,0 +1,2 @@
+class QCfq:
+    pass
