@@ -1,3 +1,4 @@
 colorlog
 pysam
 multiqc
+click
