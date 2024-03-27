@@ -5,6 +5,7 @@ from metaG.utils import merge_json_files, merge_fastqc_res
 import json
 import glob
 import os
+from metaG.utils import get_target_dir
 class DataPreProcessor:
 
     def __init__(self, 
@@ -51,15 +52,16 @@ class DataPreProcessor:
             )
             runner.run()
 
-        json_files = glob.glob(f"{self.outdir}/*prep/QC/TrimmomaticCut/*_trimmomatic_stat.json")
+        trim_dir = get_target_dir(self.outdir, "prep", "QC/TrimmomaticCut/")
+        fastqc_dir = get_target_dir(self.outdir, "prep", "QC/Fastqc/")
+        prep_dir = get_target_dir(self.outdir, "prep")
+
+        json_files = glob.glob(f"{trim_dir}/*_trimmomatic_stat.json")
         dict_merge = merge_json_files(json_files)
 
-        path = glob.glob(f"{self.outdir}/*prep/")[0]
-        fastqc_out = glob.glob(f"{self.outdir}/*prep/QC/Fastqc/")[0]
-
-        with open(f"{path}/paired_data.json", "w") as fd:
+        with open(f"{prep_dir}/paired_data.json", "w") as fd:
             json.dump(dict_merge, fd, indent=4)
-        merge_fastqc_res(fastqc_out, path)
+        merge_fastqc_res(fastqc_dir, prep_dir)
     
     def run_preprocessor(self):
         self.load_rawdata()

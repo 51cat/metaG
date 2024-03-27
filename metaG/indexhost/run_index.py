@@ -57,7 +57,7 @@ class IndexHost(MinAna):
             cp_to_database_cmds = [f"cp -a {os.path.abspath(file)} {new_host_path}"
                         for file in index_files]
 
-            mv_to_outdir = [f"mv {os.path.abspath(file)} {self.outdir}/01.prep/ref_index/"
+            mv_to_outdir = [f"mv {os.path.abspath(file)} {self.outdir}/{self._steps_dir}/"
                         for file in index_files]
 
             self.run_cmds(cp_to_database_cmds)
