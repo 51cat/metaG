@@ -15,8 +15,11 @@ conda activate my_cenv python=3.10
 1. clone仓库
 
 ```
-git clone 
-cd metaG/
+git clone git@github.com:51cat/metaG.git
+or
+git clone https://github.com/51cat/metaG.git
+
+cd ./metaG
 ```
 
 2. 安装必要的库
