@@ -12,7 +12,7 @@ Python 3.10
 conda create -n my_cenv python=3.10
 ```
 
-1. clone仓库
+2. clone仓库
 
 ```
 git clone git@github.com:51cat/metaG.git
@@ -22,20 +22,20 @@ git clone https://github.com/51cat/metaG.git
 cd ./metaG
 ```
 
-2. 安装必要的库
+3. 安装必要的库
 
 ```
 conda install --file ./conda_pkgs.txt
 pip install -r ./requirement.txt 
 ```
 
-3. 安装软件所需数据库(后期会直接挂在阿里云上面可以简单快速下载)
+4. 安装软件所需数据库(后期会直接挂在阿里云上面可以简单快速下载)
 
 ```
 cp /home/issas/dev/meta_genome/metaG/lib ./metaG/
 ```
 
-4. 安装metaG
+5. 安装metaG
 
 ```
 pip install -e .
