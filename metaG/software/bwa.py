@@ -2,6 +2,7 @@ import argparse
 import subprocess
 from metaG.common.log import add_log
 import os
+import glob
 import metaG
 
 BWA_PATH = f"{os.path.dirname(metaG.__file__)}/lib/softs/bwa/bwa"
@@ -36,8 +37,13 @@ class bwa:
         subprocess.check_call(cmd1, shell=True)
         subprocess.check_call(cmd2, shell=True)
 
-    def mem(self):
-        pass
+    def mem(self, out_file_name):
+        genome_fa = glob.glob(f"{self.genome_dir}/{self.host}.fasta")[0]
+        cmd = (
+            f"{BWA_PATH} mem -t 40 -M {genome_fa} {self.r1} {self.r2} | "
+            f"samtools view -@{self.threads} -b > {out_file_name}"
+        )
+        subprocess.check_call(cmd, shell=True)
 
 
 def main():
@@ -47,9 +53,10 @@ def main():
     parser.add_argument('--mode', help='', default=None, required=True)
     parser.add_argument('--genome_dir', help='', required=False)
     parser.add_argument('--r1', help='')
-    parser.add_argument('--r2', help='', type=float, default=1e-09)
-    parser.add_argument('--out', help='', type=int, default=80)
-    parser.add_argument('--threads', help='', type=int, default=80)
+    parser.add_argument('--r2', help='')
+    parser.add_argument('--out', help='')
+    parser.add_argument('--mem_out_file_name', help='')
+    parser.add_argument('--threads', help='', type=int, default=16)
     
     args = parser.parse_args()
 
@@ -69,7 +76,7 @@ def main():
         runner.index()
     
     if args.mode == "mem":
-        runner.mem()
+        runner.mem(out_file_name=args.mem_out_file_name)
 
 if __name__ == '__main__':
     main()

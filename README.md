@@ -1,32 +1,52 @@
 # 宏基因组流程开发
 
 ```
-Python 3.6.13
+Python 3.10
 ```
 
-# 结构说明
+# 安装步骤
 
-`data/`: 存放一些必要的数据, 例如某些软件需要的必须数据以及数据库等
+1. 创建conda环境
 
-`metaG/`: 源码目录
+```
+conda activate my_cenv python=3.10
+```
 
-`scripts/` 存放一些小脚本小工具性质
+1. clone仓库
 
-`test/`: 测试目录， 包含测试代码和测试数据
+```
+git clone 
+cd metaG/
+```
 
-`metaG/common`: 公共模块存放位置
+2. 安装必要的库
 
-`metaG/indexhost`: 宿主构建索引模块
+```
+conda install --file ./conda_pkgs.txt
+pip install -r ./requirement.txt 
+```
 
-`metaG/QC`: QC模块
+3. 安装软件所需数据库(后期会直接挂在阿里云上面可以简单快速下载)
 
-`metaG/assembly`: assembly模块
+cp /home/issas/dev/meta_genome/metaG/lib ./metaG/
 
-`metaG/software`: 所有的第三方软件的调用模块
+4. 安装metaG
 
-`metaG/tools`: 工具模块
-
-`metaG/utils.py`: 可复用的函数
-
-# 部署
+```
 pip install -e .
+```
+
+# 测试运行
+
+metaG pre-process \
+   --rawdata_table raw_file.tsv\
+   --host human \
+   --outdir ./out/
+
+# 输入格式
+
+raw_file.tsv:
+
+PM_1	/home/issas/dev/meta_genome/test/fqs/sub1_R1.fastq.gz	/home/issas/dev/meta_genome/test/fqs/sub1_R2.fastq.gz
+PM_2	/home/issas/dev/meta_genome/test/fqs/sub2_R1.fastq.gz	/home/issas/dev/meta_genome/test/fqs/sub2_R2.fastq.gz
+PM_3	/home/issas/dev/meta_genome/test/fqs/sub3_R1.fastq.gz	//home/issas/dev/meta_genome/test/fqs/sub3_R2.fastq.gz

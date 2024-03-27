@@ -4,3 +4,4 @@
 *.fasta*
 *test*
 *egg-info*
+push.sh

@@ -5,6 +5,7 @@ from metaG.utils import merge_json_files, merge_fastqc_res
 import json
 import glob
 import os
+import pandas as pd
 from metaG.utils import get_target_dir
 class DataPreProcessor:
 
@@ -48,21 +49,35 @@ class DataPreProcessor:
                 r1 = r1, 
                 r2= r2, 
                 sample_name=sample_name, 
-                outdir=self.outdir
+                outdir=self.outdir,
+                host = self.host
             )
             runner.run()
 
         trim_dir = get_target_dir(self.outdir, "prep", "QC/TrimmomaticCut/")
         fastqc_dir = get_target_dir(self.outdir, "prep", "QC/Fastqc/")
         prep_dir = get_target_dir(self.outdir, "prep")
+        remove_host_dir = get_target_dir(self.outdir, "prep", "remove_host")
 
-        json_files = glob.glob(f"{trim_dir}/*_trimmomatic_stat.json")
-        dict_merge = merge_json_files(json_files)
+        json_files_trim = glob.glob(f"{trim_dir}/*_trimmomatic_stat.json")
+        json_files_remove_host = glob.glob(f"{remove_host_dir}/*_clean_data.json")
+        host_count_files = glob.glob(f"{remove_host_dir}/*_host_count.tsv")
+
+        dict_merge_trim = merge_json_files(json_files_trim)
+        dict_merge_host = merge_json_files(json_files_remove_host)
 
         with open(f"{prep_dir}/paired_data.json", "w") as fd:
-            json.dump(dict_merge, fd, indent=4)
+            json.dump(dict_merge_trim, fd, indent=4)
+        
+        with open(f"{prep_dir}/clean_data.json", "w") as fd:
+            json.dump(dict_merge_host, fd, indent=4)
+
         merge_fastqc_res(fastqc_dir, prep_dir)
-    
+        
+        pd.concat(
+            [pd.read_table(p) for p in host_count_files]
+        ).to_csv(f"{prep_dir}/host_count_all.tsv", sep="\t", index =None)
+        
     def run_preprocessor(self):
         self.load_rawdata()
         self.index_host()

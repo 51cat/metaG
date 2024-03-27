@@ -7,7 +7,7 @@ def main():
 
 @main.command()
 @click.option('--rawdata_table', default='', required=True)
-@click.option('--host', default='', required=True)
+@click.option('--host', required=True)
 @click.option('--host_genome', default = None)
 @click.option('--outdir', default='', required=True)
 def pre_process(rawdata_table, host, host_genome, outdir):

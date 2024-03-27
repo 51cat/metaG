@@ -11,7 +11,7 @@ setup(
     packages=setuptools.find_packages(),
     keywords=['keyword'],
     install_requires=[
-        "colorlog",
+    
     ],
     python_requires=">=3",
     entry_points="""
