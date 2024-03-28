@@ -74,7 +74,9 @@ class HostRemover(MinAna):
 
         bam = pysam.AlignmentFile(self.out_bam)
         for r in bam:
-            if r.reference_name is None:
+            f1 = r.reference_name is None
+            f2 = r.is_paired
+            if f1 & f2:
                 self.count_dict["target_nreads"] += 1
                 
                 if r.is_read1:
