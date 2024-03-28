@@ -2,6 +2,7 @@
 import subprocess
 from abc import abstractmethod
 import os
+import json
 
 class MinAna:
     def __init__(self, outdir, *args, **kwargs) -> None:
@@ -23,6 +24,11 @@ class MinAna:
     def run_cmds(self, cmd_lst):
         for cmd in cmd_lst:
             subprocess.check_call(cmd, shell=True)
+    
+    def write_json(self, dict, out):
+        json_str = json.dumps(dict, indent=4)
+        with open(out,"w") as fd:
+            fd.write(json_str)
 
     @abstractmethod
     def run(self):

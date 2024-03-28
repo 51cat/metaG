@@ -35,3 +35,8 @@ def get_target_dir(res_outdir, step_name, sub_step = ""):
         if len(dir) > 1 or len(dir) == 0:
             raise KeyError(f"Error {res_outdir}")
         return dir[0]
+
+def rename_fa_to_target_name(in_fa, target, out_fa):
+    with open(in_fa) as fd_in:
+        with open(out_fa, "w") as fd_out:
+            pass

@@ -17,5 +17,6 @@ setup(
     entry_points="""
         [console_scripts]
         metaG=metaG.metaG_start:main
+        get_config=metaG.common.get_config:main
     """
 )
