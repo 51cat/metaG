@@ -1,3 +1,3 @@
-PM_1	/home/issas/dev/meta_genome/test/fqs/sub1_R1.fastq.gz	/home/issas/dev/meta_genome/test/fqs/sub1_R2.fastq.gz
-PM_2	/home/issas/dev/meta_genome/test/fqs/sub2_R1.fastq.gz	/home/issas/dev/meta_genome/test/fqs/sub2_R2.fastq.gz
-PM_3	/home/issas/dev/meta_genome/test/fqs/sub3_R1.fastq.gz	//home/issas/dev/meta_genome/test/fqs/sub3_R2.fastq.gz
+PM_1	/home/issas/dev/meta_genome/data/sub1_R1.fastq.gz	/home/issas/dev/meta_genome/data//sub1_R2.fastq.gz
+PM_2	/home/issas/dev/meta_genome/data//sub2_R1.fastq.gz	/home/issas/dev/meta_genome/data//sub2_R2.fastq.gz
+PM_3	/home/issas/dev/meta_genome/data//sub3_R1.fastq.gz	/home/issas/dev/meta_genome/data//sub3_R2.fastq.gz

@@ -1,5 +1,5 @@
 metaG pre-process \
-   --rawdata_table raw_file.list\
+   --rawdata_table ./data/raw_file.list\
    --host rice \
    --outdir ./test/out/
 
