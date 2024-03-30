@@ -13,12 +13,15 @@ def main():
 @click.option('--host', required=True)
 @click.option('--host_genome', default = None)
 @click.option('--outdir', default='', required=True)
-def pre_process(rawdata_table, host, host_genome, outdir):
+@click.option('--config_file', required=False, default =None)
+def pre_process(rawdata_table, host, host_genome, outdir, config_file):
     runner = DataPreProcessor(
         fq_files_table=rawdata_table,
         host=host,
         host_genome_fa=host_genome,
-        outdir=outdir
+        outdir=outdir,
+        config_file=config_file
+        
     )
     runner.run_preprocessor()
 

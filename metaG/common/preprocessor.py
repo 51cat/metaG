@@ -13,14 +13,16 @@ class DataPreProcessor:
                  fq_files_table, 
                  host,
                  outdir,
-                 host_genome_fa = None) -> None:
+                 host_genome_fa = None,
+                 config_file = None) -> None:
         
         self.fq_files_table = fq_files_table
         self.host = host
         self.outdir = outdir
         self.host_genome_fa =host_genome_fa
         self.rawdata_json = None
-    
+        self.config_file = config_file
+
     def load_rawdata(self):
         runner = DataLoader(
             self.fq_files_table,
@@ -50,7 +52,8 @@ class DataPreProcessor:
                 r2= r2, 
                 sample_name=sample_name, 
                 outdir=self.outdir,
-                host = self.host
+                host = self.host,
+                config_file = self.config_file
             )
             runner.run()
 

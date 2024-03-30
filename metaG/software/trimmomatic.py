@@ -5,9 +5,21 @@ import os
 import metaG
 import re
 import json
+from metaG.utils import parse_config_file
 from collections import defaultdict
 
 ADAPTER = f"ILLUMINACLIP:{os.path.dirname(metaG.__file__)}/lib/adapters/TruSeq3-PE.fa:2:30:10 SLIDINGWINDOW:4:15 MINLEN:75"
+
+def mk_trim_rules(
+        adapter_fa, 
+        mismatch,
+        match_pct,
+        match_pct_force,
+        slide_window,
+        min_len,
+        plate = 'ILLUMINACLIP'):
+    return f"{plate}:{adapter_fa}:{mismatch}:{match_pct}:{match_pct_force} SLIDINGWINDOW:{slide_window} MINLEN:{min_len}"
+    
 
 class Trimmomatic:
     def __init__(self,
@@ -16,7 +28,8 @@ class Trimmomatic:
                  sample_name = None,
                  out = None,
                  threads = 16,
-                 phred = "phred33"
+                 phred = "phred33",
+                 config_file = None
                  ) -> None:
         
         self.r1 = r1
@@ -26,13 +39,11 @@ class Trimmomatic:
         self.threads = threads
         self.phred = phred
         self._adapter = ADAPTER
+        self.config_file = config_file
         self._reads_dict = defaultdict(lambda: defaultdict(str))
+    
 
     def mk_outdir(self):
-        #r1_file_name = self.r1.split("/")[-1]  
-        #r2_file_name = self.r2.split("/")[-1]  
-        #self.r1_name = r1_file_name.split("fastq.gz")[0].rstrip(".")
-        #self.r2_name = r2_file_name.split("fastq.gz")[0].rstrip(".")
 
         subprocess.check_call(f"mkdir -p {self.out}/paired/", shell= True)
         subprocess.check_call(f"mkdir -p {self.out}/unpaired/", shell= True)
@@ -47,6 +58,19 @@ class Trimmomatic:
     
     def run(self):
         self.mk_outdir()
+
+        if self.config_file is not None:
+            config_dict = parse_config_file(self.config_file, key="Trimmomatic", return_dict=True)
+            self._adapter = mk_trim_rules(
+                config_dict["adapter_fa"],
+                config_dict["mismatch"],
+                config_dict["match_pct"],
+                config_dict["match_pct_force"],
+                config_dict["slide_window"],
+                config_dict["min_len"],
+                config_dict["plate"]
+            )
+
         cmd = (
             f"trimmomatic PE "
             f"-threads {self.threads} "
@@ -69,6 +93,7 @@ def main():
     parser.add_argument('--out', help='', required=True)
     parser.add_argument('--sample_name', help='', required=True)
     parser.add_argument('--phred', help='', default="phred33")
+    parser.add_argument('--config_file', help='', default="phred33")
     args = parser.parse_args()
 
     runner = Trimmomatic(
@@ -76,7 +101,8 @@ def main():
         r2 = args.r2,
         out = args.out,
         phred = args.phred,
-        sample_name = args.sample_name
+        sample_name = args.sample_name,
+        config_file=args.config_file
     )
 
     runner.run()

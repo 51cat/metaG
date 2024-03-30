@@ -26,7 +26,12 @@ class Assembly(MinAna):
             r1 = fq_path_dict[sample_name]["R1"]
             r2 = fq_path_dict[sample_name]["R2"]
             runner = MEGAHITer(
-                r1=r1, r2=r2, sample_name=sample_name, outdir=self.outdir,min_contig_len = self.min_contig_len
+                r1=r1, 
+                r2=r2, 
+                sample_name=sample_name, 
+                outdir=self.outdir,
+                min_contig_len = self.min_contig_len,
+                config_file=self.config_file
             )
             runner.run()
             self.jsons.append(runner.get_clean_json())

@@ -1,0 +1,18 @@
+Trimmomatic:
+  adapter_fa: ''
+  mismatch: 2
+  match_pct: 30
+  match_pct_force: 10 
+  slide_window: '4:15'
+  min_len: 75
+  plate: 'ILLUMINACLIP'
+
+MEGAHIT:
+  memory: 0.9
+  num-cpu-threads: 128
+  k-min: 21
+  k-max: 141
+  k-step: 10
+  k-list: "21,29,39,59,79,99,119,141"
+  set-list-by-min-max-step: false
+  min-count: 2

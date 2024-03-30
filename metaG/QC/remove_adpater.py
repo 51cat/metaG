@@ -39,12 +39,14 @@ class TrimmomaticCutter(MinAna):
                  r1, 
                  r2, 
                  sample_name, 
-                 outdir):
+                 outdir,
+                 config_file = None):
             super().__init__(outdir=outdir, step_name="prep")
             self.r1 = r1
             self.r2 = r2
             self.sample_name = sample_name
             self.outdir = outdir
+            self.config_file = config_file
             self.phred = guss_phred(self.r1)
 
             self._steps_dir = "01.prep/QC/TrimmomaticCut/"
@@ -61,7 +63,8 @@ class TrimmomaticCutter(MinAna):
             r1 = self.r1,
             r2 = self.r2,
             out = self.step_outdir,
-            sample = self.sample_name
+            sample = self.sample_name,
+            config_file = self.config_file
         )
 
         trimmomatic_infc.mk_cmd()

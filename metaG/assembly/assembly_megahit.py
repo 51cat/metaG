@@ -51,7 +51,7 @@ class MEGAHITer(MinAna):
             r1 = self.r1,
             r2 = self.r2,
             out = f"{self.step_outdir}/{self.sample_name}",
-            config_file = None,
+            config_file = self.config_file,
             min_contig_len = self.min_contig_len
         )
 

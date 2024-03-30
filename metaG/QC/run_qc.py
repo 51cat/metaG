@@ -12,7 +12,8 @@ class QCfq(MinAna):
             r2= None,
             outdir= None ,
             sample_name = None,
-            host = None
+            host = None,
+            config_file = None
             ) -> None:
         super().__init__(outdir=outdir)
         self.r1 = r1
@@ -20,6 +21,7 @@ class QCfq(MinAna):
         self.outdir = outdir
         self.sample_name = sample_name
         self.host = host
+        self.config_file = config_file
 
     def run(self):
         
@@ -27,7 +29,8 @@ class QCfq(MinAna):
             r1 = self.r1, 
             r2 = self.r2,
             sample_name= self.sample_name,
-            outdir=self.outdir
+            outdir=self.outdir,
+            config_file=self.config_file
         )
        trim_runner.run()
        

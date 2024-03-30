@@ -1,8 +1,8 @@
-
-## TO DO: 配置文件获取命令
-
+import metaG
+import os
 def get_config():
-    pass
+    file = f"{os.path.dirname(metaG.__file__)}/configs/configs.yaml"
+    os.system(f"cp -a {file} ./")
 
 def main():
-    pass
+    get_config()

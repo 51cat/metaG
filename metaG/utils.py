@@ -2,6 +2,7 @@ import os
 import json
 import glob
 import subprocess
+import yaml
 
 def get_software_path(name):
     import metaG
@@ -59,3 +60,24 @@ def seqtools_run(out_file, do, target_name = None, in_fa= None, fa_lst = None):
         cmd_basic += f" --fa {in_fa} "
         cmd_basic += f" --method {do} "
     subprocess.check_call(cmd_basic, shell=True)
+
+def parse_config_file(config_yaml, key, args_prfx = "--", return_dict = False):
+    flag1 = ["True", "TRUE", "true", "T", "t", True]
+    flag2 = ["False", "FALSE", "false", "F", "f", False]
+
+    with open(config_yaml,encoding='utf-8') as fd:
+        data = yaml.load(fd,Loader=yaml.FullLoader)
+    use = data[key]
+    
+    if return_dict:
+        return use
+    
+    args_str = ""
+    for arg, value in use.items():
+        if value in flag1:
+            args_str += f"{args_prfx}{arg} "
+        elif value in flag2 :
+            continue
+        else: 
+            args_str += f"{args_prfx}{arg} {value} "
+    return args_str
