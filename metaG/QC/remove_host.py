@@ -18,7 +18,7 @@ class HostRemover(MinAna):
                  sample_name, 
                  outdir,
                  threads = 16):
-            super().__init__(outdir=outdir)
+            super().__init__(outdir=outdir, step_name="prep")
             self.r1 = r1
             self.r2 = r2
             self.host = host
@@ -26,17 +26,22 @@ class HostRemover(MinAna):
             self.genome_dir = genome_dir
             self.sample_name = sample_name
             self.outdir = outdir
-            self._steps_dir = "01.prep/remove_host/"
             self._reads_dict = defaultdict(lambda:defaultdict(str))
+
+            self._steps_dir = "01.prep/remove_host/"
+            self.step_outdir = f"{self.outdir}/{self._steps_dir}/"
+            self.make_step_outdir(self._steps_dir)
+            self.prep_start()
+
     
     @add_log
     def map_reads_to_host(self):
-        self.make_step_outdir(self._steps_dir)
-        self.out_bam = f"{self.outdir}/{self._steps_dir}/{self.sample_name}_host.bam"
+        
+        self.out_bam = f"{self.step_outdir}/{self.sample_name}_host.bam"
 
         bwa_mem_infc = SIF(
             interpreter="python",
-            work_dir=f"{self.outdir}/{self._steps_dir}/",
+            work_dir= self.step_outdir,
             path=get_software_path("bwa"),
             host = self.host,
             fa = None,
@@ -44,7 +49,7 @@ class HostRemover(MinAna):
             genome_dir = self.genome_dir,
             r1 = self.r1,
             r2 = self.r2,
-            out = f"{self.outdir}/{self._steps_dir}/",
+            out = {self.step_outdir},
             mem_out_file_name = self.out_bam
         )
 
@@ -63,8 +68,8 @@ class HostRemover(MinAna):
              "sample_name": self.sample_name
         }
 
-        self.out_r1 = f"{self.outdir}/{self._steps_dir}/{self.sample_name}_clean_R1.fastq.gz"
-        self.out_r2 = f"{self.outdir}/{self._steps_dir}/{self.sample_name}_clean_R2.fastq.gz"
+        self.out_r1 = f"{self.step_outdir}/{self.sample_name}_clean_R1.fastq.gz"
+        self.out_r2 = f"{self.step_outdir}/{self.sample_name}_clean_R2.fastq.gz"
 
         self._reads_dict[self.sample_name]["R1"] = os.path.abspath(self.out_r1)
         self._reads_dict[self.sample_name]["R2"] = os.path.abspath(self.out_r2)
@@ -92,14 +97,14 @@ class HostRemover(MinAna):
     
     def out_count_detail(self):
          
-        with open(f"{self.outdir}/{self._steps_dir}/{self.sample_name}_clean_data.json", "w") as fd:
+        with open(f"{self.step_outdir}/{self.sample_name}_clean_data.json", "w") as fd:
             json.dump(self._reads_dict, fd, indent=4)
         
         df = pd.DataFrame([self.count_dict])
-        df.to_csv(f"{self.outdir}/{self._steps_dir}/{self.sample_name}_host_count.tsv", index=None, sep="\t")
+        df.to_csv(f"{self.step_outdir}/{self.sample_name}_host_count.tsv", index=None, sep="\t")
         
     def get_clean_r1_r2_path(self):
-        stat_file = f"{self.outdir}/{self._steps_dir}/{self.sample_name}_clean_data.json"
+        stat_file = f"{self.step_outdir}/{self.sample_name}_clean_data.json"
         with open(stat_file, 'r') as f:
             data = json.load(f)
         return data[self.sample_name]['R1'], data[self.sample_name]['R2']

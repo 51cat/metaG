@@ -40,7 +40,7 @@ class TrimmomaticCutter(MinAna):
                  r2, 
                  sample_name, 
                  outdir):
-            super().__init__(outdir=outdir)
+            super().__init__(outdir=outdir, step_name="prep")
             self.r1 = r1
             self.r2 = r2
             self.sample_name = sample_name
@@ -48,16 +48,19 @@ class TrimmomaticCutter(MinAna):
             self.phred = guss_phred(self.r1)
 
             self._steps_dir = "01.prep/QC/TrimmomaticCut/"
+            self.step_outdir = f"{self.outdir}/{self._steps_dir}/"
+            self.make_step_outdir(self._steps_dir)
+            self.prep_start()
     
     def remove_adpater(self):
-        self.make_step_outdir(self._steps_dir)
+        
         trimmomatic_infc = SIF(
             interpreter="python",
-            work_dir=f"{self.outdir}/{self._steps_dir}/",
+            work_dir=self.step_outdir,
             path=get_software_path("trimmomatic"),
             r1 = self.r1,
             r2 = self.r2,
-            out = f"{self.outdir}/{self._steps_dir}/",
+            out = self.step_outdir,
             sample = self.sample_name
         )
 
@@ -65,7 +68,7 @@ class TrimmomaticCutter(MinAna):
         trimmomatic_infc.run_by_py()
     
     def get_clean_r1_r2_path(self):
-        stat_file = f"{self.outdir}/{self._steps_dir}/{self.sample_name}_trimmomatic_stat.json"
+        stat_file = f"{self.step_outdir}/{self.sample_name}_trimmomatic_stat.json"
         with open(stat_file, 'r') as f:
             data = json.load(f)
         return data[self.sample_name]['R1'], data[self.sample_name]['R2']

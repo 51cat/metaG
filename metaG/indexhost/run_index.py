@@ -10,24 +10,26 @@ from metaG.common.log import add_log
 class IndexHost(MinAna):
     
     def __init__(self, host, outdir, fa = None):
-        super().__init__(outdir=outdir)
+        super().__init__(outdir=outdir, step_name="prep")
 
         self._hostbase_path = f"{os.path.dirname(metaG.__file__)}/lib/host_database"
         self._supports = os.listdir(self._hostbase_path)
-        self._steps_dir = "01.prep/ref_index/"
+        
         self.host = host
         self.fa = fa
-    
+
+        self._steps_dir = "01.prep/ref_index/"
+        self.step_outdir = f"{self.outdir}/{self._steps_dir}/"
+        self.make_step_outdir(self._steps_dir)
+        self.prep_start()
 
     @add_log
     def index_host(self):
-        self.make_step_outdir(self._steps_dir)
-
         if self.host in self._supports:
             self.index_host.logger.info(f"Successfully found {self.host} in {self._supports} ")
 
             index_files = glob.glob(f"{self._hostbase_path}/{self.host}/*")
-            link_cmds = [f"ln -s {os.path.abspath(file)} {self.outdir}/01.prep/ref_index/" 
+            link_cmds = [f"ln -s {os.path.abspath(file)} {self.step_outdir}" 
                         for file in index_files]
             
             self.run_cmds(link_cmds)
@@ -57,7 +59,7 @@ class IndexHost(MinAna):
             cp_to_database_cmds = [f"cp -a {os.path.abspath(file)} {new_host_path}"
                         for file in index_files]
 
-            mv_to_outdir = [f"mv {os.path.abspath(file)} {self.outdir}/{self._steps_dir}/"
+            mv_to_outdir = [f"mv {os.path.abspath(file)} {self.step_outdir}"
                         for file in index_files]
 
             self.run_cmds(cp_to_database_cmds)
@@ -65,7 +67,7 @@ class IndexHost(MinAna):
 
     
     def get_index_dir(self):
-        return f"{self.outdir}/{self._steps_dir}/"
+        return self.step_outdir
 
     def run(self):
         self.index_host()
