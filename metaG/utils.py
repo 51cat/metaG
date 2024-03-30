@@ -36,7 +36,7 @@ def get_target_dir(res_outdir, step_name, sub_step = ""):
             raise KeyError(f"Error {res_outdir}")
         return dir[0]
 
-def seqtools_run(out_file, do, targe_name = None, in_fa= None, fa_lst = None):
+def seqtools_run(out_file, do, target_name = None, in_fa= None, fa_lst = None):
     import metaG
     moduledir = os.path.dirname(metaG.__file__)
     path = os.path.abspath(f'{moduledir}/src/seqtools')        
@@ -48,7 +48,7 @@ def seqtools_run(out_file, do, targe_name = None, in_fa= None, fa_lst = None):
 
     if do == "rename":
         cmd_basic += f" --fa {in_fa} "
-        cmd_basic += f" --target_name {targe_name} "
+        cmd_basic += f" --target_name {target_name} "
         cmd_basic += f" --method {do} "
     
     if do == "merge":

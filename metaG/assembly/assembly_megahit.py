@@ -64,7 +64,7 @@ class MEGAHITer(MinAna):
              out_file=self.clean_contig,
              in_fa=self.raw_contig,
              do="rename",
-             targe_name=self.sample_name
+             target_name=self.sample_name
         )
         
         self.write_json({self.sample_name:os.path.abspath(self.clean_contig)}, 
