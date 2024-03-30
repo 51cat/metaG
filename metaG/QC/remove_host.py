@@ -49,7 +49,7 @@ class HostRemover(MinAna):
             genome_dir = self.genome_dir,
             r1 = self.r1,
             r2 = self.r2,
-            out = {self.step_outdir},
+            out = self.step_outdir,
             mem_out_file_name = self.out_bam
         )
 

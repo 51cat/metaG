@@ -59,7 +59,7 @@ class Trimmomatic:
     def run(self):
         self.mk_outdir()
 
-        if self.config_file is not None:
+        if self.config_file not in [None, "None"]:
             config_dict = parse_config_file(self.config_file, key="Trimmomatic", return_dict=True)
             self._adapter = mk_trim_rules(
                 config_dict["adapter_fa"],
@@ -93,7 +93,7 @@ def main():
     parser.add_argument('--out', help='', required=True)
     parser.add_argument('--sample_name', help='', required=True)
     parser.add_argument('--phred', help='', default="phred33")
-    parser.add_argument('--config_file', help='', default="phred33")
+    parser.add_argument('--config_file', help='', default=None)
     args = parser.parse_args()
 
     runner = Trimmomatic(
