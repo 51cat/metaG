@@ -36,7 +36,26 @@ def get_target_dir(res_outdir, step_name, sub_step = ""):
             raise KeyError(f"Error {res_outdir}")
         return dir[0]
 
-def rename_fa_to_target_name(in_fa, target, out_fa):
-    with open(in_fa) as fd_in:
-        with open(out_fa, "w") as fd_out:
-            pass
+def seqtools_run(out_file, do, targe_name = None, in_fa= None, fa_lst = None):
+    import metaG
+    moduledir = os.path.dirname(metaG.__file__)
+    path = os.path.abspath(f'{moduledir}/src/seqtools')        
+    
+    cmd_basic = (
+         f"{path} "
+         f"--outfile {out_file} "
+    )
+
+    if do == "rename":
+        cmd_basic += f" --fa {in_fa} "
+        cmd_basic += f" --target_name {targe_name} "
+        cmd_basic += f" --method {do} "
+    
+    if do == "merge":
+        fas = "::".join(fa_lst)
+        return
+
+    if do == "len":
+        cmd_basic += f" --fa {in_fa} "
+        cmd_basic += f" --method {do} "
+    subprocess.check_call(cmd_basic, shell=True)
