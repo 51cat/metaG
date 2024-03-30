@@ -44,7 +44,7 @@ class MEGAHITer(MinAna):
     
      def assembly_megahit(self):
         
-        fastqc_infc = SIF(
+        MEGAHIT_infc = SIF(
             interpreter="python",
             work_dir=f"{self.step_outdir}/{self.sample_name}",
             path=get_software_path("megahit"),
@@ -55,8 +55,8 @@ class MEGAHITer(MinAna):
             min_contig_len = self.min_contig_len
         )
 
-        fastqc_infc.mk_cmd()
-        fastqc_infc.run_by_py()
+        MEGAHIT_infc.mk_cmd()
+        MEGAHIT_infc.run_by_py()
 
         self.raw_contig = f"{self.step_outdir}/{self.sample_name}/final.contigs.fa"
         self.clean_contig = f"{self.parent_dir}/{self.sample_name}_clean.contigs.fa"
