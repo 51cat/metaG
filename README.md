@@ -6,39 +6,17 @@ Python 3.10
 
 # 安装步骤
 
-1. 创建conda环境
+1. clone仓库
 
 ```
-conda create -n my_cenv python=3.10
-```
-
-2. clone仓库
-
-```
-git clone git@github.com:51cat/metaG.git
-or
 git clone https://github.com/51cat/metaG.git
+```
 
+3. 安装
+
+```
 cd ./metaG
-```
-
-3. 安装必要的库
-
-```
-conda install --file ./conda_pkgs.txt
-pip install -r ./requirement.txt 
-```
-
-4. 安装软件所需数据库(后期会直接挂在阿里云上面可以简单快速下载)
-
-```
-cp /home/issas/dev/meta_genome/metaG/lib ./metaG/
-```
-
-5. 安装metaG
-
-```
-pip install -e .
+bash scripts/build.sh
 ```
 
 # 测试运行
