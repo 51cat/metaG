@@ -6,7 +6,7 @@ import json
 import glob
 import os
 import pandas as pd
-from metaG.utils import get_target_dir
+from metaG.utils import get_target_dir, get_fa_stat
 class DataPreProcessor:
 
     def __init__(self, 
@@ -80,6 +80,13 @@ class DataPreProcessor:
         pd.concat(
             [pd.read_table(p) for p in host_count_files]
         ).to_csv(f"{prep_dir}/host_count_all.tsv", sep="\t", index =None)
+
+        # write stat
+        reads = []
+        for k, _ in dict_merge_host.items():
+            reads.append(dict_merge_host[k]["R1"])
+            reads.append(dict_merge_host[k]["R2"])
+        get_fa_stat(f"{prep_dir}/qc_fa_stat.txt", reads)
         
     def run_preprocessor(self):
         self.load_rawdata()

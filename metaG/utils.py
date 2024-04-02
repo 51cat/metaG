@@ -4,6 +4,7 @@ import glob
 import subprocess
 import yaml
 
+
 def get_software_path(name):
     import metaG
     moduledir = os.path.dirname(metaG.__file__)
@@ -81,3 +82,11 @@ def parse_config_file(config_yaml, key, args_prfx = "--", return_dict = False):
         else: 
             args_str += f"{args_prfx}{arg} {value} "
     return args_str
+
+
+def get_fa_stat(stat_file_out, fa_lst):
+    import metaG
+    seqkit_exec = f"{os.path.dirname(metaG.__file__)}/lib/softs/seqkit/seqkit"
+    files = " ".join(fa_lst)
+    cmd = f"{seqkit_exec} stat {files} -b -a > {stat_file_out}"
+    subprocess.check_call(cmd, shell=True)

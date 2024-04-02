@@ -1,6 +1,6 @@
 from metaG.assembly.assembly_megahit import MEGAHITer
 from metaG.common.minana import MinAna
-from metaG.utils import get_target_dir, merge_json_files
+from metaG.utils import get_target_dir, merge_json_files, get_fa_stat
 import json
 
 class Assembly(MinAna):
@@ -38,3 +38,8 @@ class Assembly(MinAna):
         clean_contig_dict  = merge_json_files(self.jsons)
         target_dir = get_target_dir(self.outdir, "assembly")
         self.write_json(clean_contig_dict, f"{target_dir}/clean_contig.json")
+        # write stat
+        reads = []
+        for k, _ in clean_contig_dict.items():
+            reads.append(clean_contig_dict[k])
+        get_fa_stat(f"{target_dir}/assembly_fa_stat.txt", reads)
