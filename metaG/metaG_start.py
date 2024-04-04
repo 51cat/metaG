@@ -1,6 +1,7 @@
 import click
 from metaG.common.preprocessor import DataPreProcessor
 from metaG.assembly.run_assembly import Assembly
+from metaG.predict.run_predict import GenePredicter
 from metaG.utils import get_target_dir
 from metaG.common.load_rawdata import DataLoader
 
@@ -49,6 +50,27 @@ def assembly(fq_table, outdir, config_file, min_contig_len):
     runner.run_assembly()
 
 
+@main.command()
+@click.option('--contig_table', default=None, required=False)
+@click.option('--outdir', default='', required=True)
+@click.option('--config_file', required=False, default =None)
+@click.option('--use', required=False, default ="prodigal")
+def predict_gene(contig_table, outdir, config_file, use):
+    
+    if contig_table is None:
+        prep_dir = get_target_dir(outdir, "assembly")
+        contig_json = f"{prep_dir}/clean_contig.json"
+    else:
+        loadder = DataLoader(contig_table, outdir)
+        contig_json = loadder.get_rawdata_json_path()
+    
+    runner = GenePredicter(
+        contig_json=contig_json,
+        outdir=outdir,
+        use=use,
+        config_file=config_file
+    )
+    runner.run_pretict()
 
 if __name__ == '__main__':
     main()

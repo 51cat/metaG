@@ -16,3 +16,13 @@ MEGAHIT:
   k-list: "21,29,39,59,79,99,119,141"
   set-list-by-min-max-step: false
   min-count: 2
+
+PRODIGAL:
+  closed_ends: false
+  output_format: "gbk"
+  code_table: 11
+  drop_sequence_with_N: false
+  bypass_Shine_Dalgarno_trainer: false
+  mode: meta
+  write_all_potential_genes: ''
+  write_a_training_file: ''

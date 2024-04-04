@@ -55,9 +55,10 @@ def seqtools_run(out_file, do, target_name = None, in_fa= None, fa_lst = None):
     
     if do == "merge":
         fas = "::".join(fa_lst)
-        return
+        cmd_basic += f" --fas {fas} "
+        cmd_basic += f" --method {do} "
 
-    if do == "len":
+    if do in ["len", "format"]:
         cmd_basic += f" --fa {in_fa} "
         cmd_basic += f" --method {do} "
     subprocess.check_call(cmd_basic, shell=True)

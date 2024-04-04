@@ -8,6 +8,7 @@ import (
 	"compress/gzip"
 	"strconv"
 	"fmt"
+	"bytes"
 )
 
 func main() {
@@ -17,6 +18,7 @@ func main() {
 	var method string
 	var target_name string
 	var outfile string
+	//var buffer bytes.Buffer
 
 	flag.StringVar(&fa, "fa", "", "Input Your fastq path")
 	flag.StringVar(&fas, "fas", "", "Input Your probe fasta path")
@@ -36,6 +38,10 @@ func main() {
 
 	if method == "len" {
 		Lenfa(fa, outfile)
+	}
+
+	if method == "format" {
+		Format(fa, outfile)
 	}
 
 }
@@ -75,6 +81,8 @@ func RenameFa(fa_path string, outfile string, target string){
 	var line int
 	var inx int
 	var new_name string
+	var buffer bytes.Buffer
+	buffer.Truncate(0)
 
 	f_in, err := os.Open(fa_path)
 	
@@ -117,6 +125,8 @@ func Lenfa(fa_path string, outfile string) {
 	var seq_name string
 	var seq_len string
 	var _slice []string
+	var buffer bytes.Buffer
+	buffer.Truncate(0)
 	
 	fa_in, err := os.Open(fa_path)
 	if err != nil {
@@ -155,5 +165,72 @@ func Lenfa(fa_path string, outfile string) {
 }
 
 func MergeFa(fa_paths string, outfile string){
+	var buffer bytes.Buffer
+	buffer.Truncate(0)
+
+	file, _ := os.OpenFile(outfile, os.O_WRONLY|os.O_CREATE, 0666)
+	defer file.Close()
+	write := bufio.NewWriter(file)
+
+	for _, path := range strings.Split(fa_paths,  "::"){
+		f, err := os.Open(path)
+		
+		if err != nil {
+			panic("Error Path " + path)
+		}
+
+		fq_scaner, _, _ := getfascaner(f, path, "fasta")
+
+		for fq_scaner.Scan() {
+			fmt.Fprintf(write,"%s\n",fq_scaner.Text())
+			write.Flush()
+		}
+		write.Flush()
+	}
+	write.Flush()
 
 }
+
+func writeRes(res map[string][]string, outfile string, names []string) {
+	var buffer bytes.Buffer
+	buffer.Truncate(0)
+	file, _ := os.OpenFile(outfile, os.O_WRONLY|os.O_CREATE, 0666)
+	//CheckError(err)
+	defer file.Close()
+	write := bufio.NewWriter(file)
+
+	for _, k := range names {
+		vv := strings.Join(res[k], "")
+		s := fmt.Sprintf("%s\n%s\n",k, vv)
+		fmt.Fprintf(write,s)
+		write.Flush()
+	}
+	write.Flush()
+}
+
+func Format(fa_path string, outfile string){
+	var seqs string
+	var name string
+	var names []string
+	outs := make(map[string][]string)
+
+	f, err := os.Open(fa_path)
+	if err != nil {
+		panic("Error Path " + outfile)
+	}
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		record := scanner.Text()
+		if strings.HasPrefix(record, ">") {
+			name = record
+			names = append(names, name)
+		}else {
+			seqs = strings.ReplaceAll(record, "\n", "")
+			outs[name] = append(outs[name], seqs)
+		}
+	}
+	writeRes(outs, outfile, names)
+}
+
+	
+
