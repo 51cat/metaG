@@ -56,42 +56,42 @@ class HostRemover(MinAna):
     
     @add_log
     def extract_reads_from_bam(self):
-        
-        def __get_fq_str(r):
-            return f'@{r.qname}\n{r.seq}\n+\n{r.qual}'
-
+        nprocess = 0
         self.count_dict = {
              "drop_nreads":0,
              "target_nreads":0,
              "sample_name": self.sample_name
         }
 
-        self.out_r1 = f"{self.step_outdir}/{self.sample_name}_clean_R1.fastq.gz"
-        self.out_r2 = f"{self.step_outdir}/{self.sample_name}_clean_R2.fastq.gz"
+        self.out_r1 = f"{self.step_outdir}/{self.sample_name}_clean_R1.fastq"
+        self.out_r2 = f"{self.step_outdir}/{self.sample_name}_clean_R2.fastq"
 
-        self._reads_dict[self.sample_name]["R1"] = os.path.abspath(self.out_r1)
-        self._reads_dict[self.sample_name]["R2"] = os.path.abspath(self.out_r2)
+        self._reads_dict[self.sample_name]["R1"] = os.path.abspath(f"{self.out_r1}.gz")
+        self._reads_dict[self.sample_name]["R2"] = os.path.abspath(f"{self.out_r2}.gz")
 
-        r1_writer = gzip.open(self.out_r1, "wb")
-        r2_writer = gzip.open(self.out_r2, "wb")
+        r1_writer = open(self.out_r1, "w")
+        r2_writer = open(self.out_r2, "w")
 
         bam = pysam.AlignmentFile(self.out_bam)
         for r in bam:
+            nprocess += 1
+            if nprocess % 5000000 == 0:
+                self.extract_reads_from_bam.logger.info(f"Process reads: {nprocess}")
             f1 = r.reference_name is None
             f2 = r.is_paired
             if f1 & f2:
                 self.count_dict["target_nreads"] += 1
                 
                 if r.is_read1:
-                     r1_str = __get_fq_str(r)
-                     r1_writer.write(f"{r1_str}\n".encode())
+                     r1_writer.write(f'@{r.qname}\n{r.seq}\n+\n{r.qual}\n')
                 
                 if r.is_read2:
-                     r2_str = __get_fq_str(r)
-                     r2_writer.write(f"{r2_str}\n".encode())
+                     r2_writer.write(f'@{r.qname}\n{r.seq}\n+\n{r.qual}\n')
             else:
                  self.count_dict["drop_nreads"] += 1
-    
+        r1_writer.close()
+        r2_writer.close()
+        self.compress_file(self.out_r1, self.out_r2)
     
     def out_count_detail(self):
          

@@ -29,7 +29,6 @@ func main() {
 
 	if method == "rename" {
 		RenameFa(fa, outfile, target_name)
-		return
 	}
 
 	if method == "merge" {
@@ -78,8 +77,8 @@ func getfascaner(f *os.File, path string, format string) (*bufio.Scanner, int, i
 
 func RenameFa(fa_path string, outfile string, target string){
 
-	var line int
-	var inx int
+	var line int64
+	var inx int64
 	var new_name string
 	var buffer bytes.Buffer
 	buffer.Truncate(0)
@@ -103,10 +102,12 @@ func RenameFa(fa_path string, outfile string, target string){
 	fa_scanner, _, _ := getfascaner(f_in, fa_path, "fasta")
 
 	for fa_scanner.Scan() {
+		fmt.Println(line)
 		line++
+		fmt.Println(fa_scanner.Text())
 		if line % 2 == 1 {
 			inx++
-			new_name = ">" + target + "_" + strconv.Itoa(inx)
+			new_name = ">" + target + "_" + strconv.FormatInt(inx,10)
 			fmt.Fprintf(write, "%s\n", new_name)
 			write.Flush()
 		}else {
@@ -114,8 +115,9 @@ func RenameFa(fa_path string, outfile string, target string){
 			fmt.Fprintf(write, "%s\n", fa_scanner.Text())
 			write.Flush()
 		}
-		write.Flush()
+		
 	}
+	write.Flush()
 
 }
 

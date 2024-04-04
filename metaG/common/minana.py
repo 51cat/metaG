@@ -4,6 +4,7 @@ from abc import abstractmethod
 import os
 import json
 from metaG.utils import get_target_dir
+from multiprocessing import Pool
 
 class MinAna:
     def __init__(self, outdir, step_name = None, *args, **kwargs) -> None:
@@ -50,6 +51,12 @@ class MinAna:
             cmds = [f"rm -rf {f}" for f in self._rubbish]
             self.run_cmds(cmds)
 
+    def compress_file(self, *files):
+        cmds = [f"gzip {f}" for f in files]
+        with Pool(processes=len(cmds)) as pool:
+            pool.map(os.system, cmds)
+        pool.close()
+        pool.join()
 
     @abstractmethod
     def run(self):
