@@ -16,13 +16,11 @@ class HostRemover(MinAna):
                  host,
                  genome_dir,
                  sample_name, 
-                 outdir,
-                 threads = 16):
+                 outdir):
             super().__init__(outdir=outdir, step_name="prep")
             self.r1 = r1
             self.r2 = r2
             self.host = host
-            self.threads = threads
             self.genome_dir = genome_dir
             self.sample_name = sample_name
             self.outdir = outdir

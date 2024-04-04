@@ -8,6 +8,9 @@ import json
 from metaG.utils import parse_config_file
 from collections import defaultdict
 
+import multiprocessing
+
+
 ADAPTER = f"ILLUMINACLIP:{os.path.dirname(metaG.__file__)}/lib/adapters/TruSeq3-PE.fa:2:30:10 SLIDINGWINDOW:4:15 MINLEN:75"
 
 def mk_trim_rules(
@@ -27,7 +30,6 @@ class Trimmomatic:
                  r2 = None,
                  sample_name = None,
                  out = None,
-                 threads = 16,
                  phred = "phred33",
                  config_file = None
                  ) -> None:
@@ -36,7 +38,7 @@ class Trimmomatic:
         self.r2 = r2
         self.sample_name = sample_name
         self.out = out
-        self.threads = threads
+        self.threads = min(64, multiprocessing.cpu_count())
         self.phred = phred
         self._adapter = ADAPTER
         self.config_file = config_file

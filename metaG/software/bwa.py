@@ -4,6 +4,7 @@ from metaG.common.log import add_log
 import os
 import glob
 import metaG
+import multiprocessing
 
 BWA_PATH = f"{os.path.dirname(metaG.__file__)}/lib/softs/bwa/bwa"
 
@@ -14,8 +15,7 @@ class bwa:
                  genome_dir = None, 
                  r1 = None, 
                  r2 = None,
-                 out = None,
-                 threads = 40
+                 out = None
                  ) -> None:
         
         self.host = host
@@ -24,7 +24,7 @@ class bwa:
         self.r1 = r1
         self.r2 = r2
         self.out = out
-        self.threads = threads
+        self.threads = min(64, multiprocessing.cpu_count())
     
     def pre_check(self):
         pass
@@ -40,7 +40,7 @@ class bwa:
     def mem(self, out_file_name):
         genome_fa = glob.glob(f"{self.genome_dir}/{self.host}.fasta")[0]
         cmd = (
-            f"{BWA_PATH} mem -t 40 -M {genome_fa} {self.r1} {self.r2} | "
+            f"{BWA_PATH} mem -t {self.threads} -M {genome_fa} {self.r1} {self.r2} | "
             f"samtools view -@{self.threads} -b > {out_file_name}"
         )
         subprocess.check_call(cmd, shell=True)
@@ -56,7 +56,6 @@ def main():
     parser.add_argument('--r2', help='')
     parser.add_argument('--out', help='')
     parser.add_argument('--mem_out_file_name', help='')
-    parser.add_argument('--threads', help='', type=int, default=16)
     
     args = parser.parse_args()
 
@@ -66,8 +65,7 @@ def main():
         args.genome_dir,
         args.r1,
         args.r2,
-        args.out,
-        args.threads
+        args.out
     )
 
     runner.pre_check()
