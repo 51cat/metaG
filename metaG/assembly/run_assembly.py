@@ -1,6 +1,7 @@
 from metaG.assembly.assembly_megahit import MEGAHITer
 from metaG.common.minana import MinAna
-from metaG.utils import get_target_dir, merge_json_files, get_fa_stat
+from metaG.common.seqtools import SeqProcesser
+from metaG.utils import get_target_dir, merge_json_files
 import json
 
 class Assembly(MinAna):
@@ -42,4 +43,4 @@ class Assembly(MinAna):
         reads = []
         for k, _ in clean_contig_dict.items():
             reads.append(clean_contig_dict[k])
-        get_fa_stat(f"{target_dir}/assembly_fa_stat.txt", reads)
+        SeqProcesser.stat(f"{target_dir}/assembly_fa_stat.txt", reads)

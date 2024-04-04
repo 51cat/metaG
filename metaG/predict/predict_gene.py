@@ -1,6 +1,6 @@
 from metaG.common.minana import MinAna
 import os
-from metaG.utils import get_software_path, seqtools_run
+from metaG.utils import get_software_path
 from metaG.software.interface import SoftInterface as SIF
 from collections import defaultdict
 

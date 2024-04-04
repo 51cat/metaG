@@ -1,12 +1,13 @@
 from metaG.QC.run_qc import QCfq
 from metaG.indexhost.run_index import IndexHost
 from metaG.common.load_rawdata import DataLoader
+from metaG.common.seqtools import SeqProcesser
 from metaG.utils import merge_json_files, merge_fastqc_res
 import json
 import glob
 import os
 import pandas as pd
-from metaG.utils import get_target_dir, get_fa_stat
+from metaG.utils import get_target_dir
 class DataPreProcessor:
 
     def __init__(self, 
@@ -86,7 +87,7 @@ class DataPreProcessor:
         for k, _ in dict_merge_host.items():
             reads.append(dict_merge_host[k]["R1"])
             reads.append(dict_merge_host[k]["R2"])
-        get_fa_stat(f"{prep_dir}/qc_fa_stat.txt", reads)
+        SeqProcesser.stat(f"{prep_dir}/qc_fa_stat.txt", reads)
         
     def run_preprocessor(self):
         self.load_rawdata()

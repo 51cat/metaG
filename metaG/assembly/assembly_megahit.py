@@ -1,5 +1,6 @@
 from metaG.common.minana import MinAna
-from metaG.utils import get_software_path, seqtools_run
+from metaG.utils import get_software_path
+from metaG.common.seqtools import SeqProcesser
 from metaG.software.interface import SoftInterface as SIF
 import os
 import matplotlib.pyplot as plt
@@ -60,12 +61,11 @@ class MEGAHITer(MinAna):
 
         self.raw_contig = f"{self.step_outdir}/{self.sample_name}/final.contigs.fa"
         self.clean_contig = f"{self.parent_dir}/{self.sample_name}_clean.contigs.fa"
-        seqtools_run(
-             out_file=self.clean_contig,
-             in_fa=self.raw_contig,
-             do="rename",
-             target_name=self.sample_name
-        )
+        
+        sp = SeqProcesser()
+        sp.set_in_fa(self.raw_contig)
+        sp.set_out_fa(self.clean_contig)
+        sp.rename(target_name=self.sample_name)
         
         self.write_json({self.sample_name:os.path.abspath(self.clean_contig)}, 
                         f"{self.step_outdir}/{self.sample_name}_contigs_clean.json")
@@ -74,11 +74,10 @@ class MEGAHITer(MinAna):
      def count_contig_len(self):
           os.system(f"mkdir -p {self.parent_dir}/contig_count/")
 
-          seqtools_run(
-             out_file=f"{self.parent_dir}/contig_count/{self.sample_name}_length.tsv",
-             in_fa=self.clean_contig,
-             do="len"
-          )
+          sp = SeqProcesser()
+          sp.set_in_fa(self.clean_contig)
+          sp.getlen(f"{self.parent_dir}/contig_count/{self.sample_name}_length.tsv")
+          
 
           draw_histogram(
               file_path= f"{self.parent_dir}/contig_count/{self.sample_name}_length.tsv",

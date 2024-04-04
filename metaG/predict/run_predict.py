@@ -1,6 +1,7 @@
 from metaG.predict.predict_gene import PREDICTer
 from metaG.common.minana import MinAna
-from metaG.utils import get_target_dir, get_fa_stat, merge_json_files, seqtools_run
+from metaG.common.seqtools import SeqProcesser
+from metaG.utils import get_target_dir, merge_json_files
 import json
 import os
 
@@ -61,7 +62,7 @@ class GenePredicter(MinAna):
         self.write_json(clean_contig_dict, f"{self.target_dir}/clean_gene.json")
         
         # write stat
-        get_fa_stat(f"{self.target_dir}/predict_gene_stat.txt", self.gene_fas)
+        SeqProcesser.stat(f"{self.target_dir}/predict_gene_stat.txt", self.gene_fas)
     
     def run_predict(self):
         self.mk_predict_gene()
