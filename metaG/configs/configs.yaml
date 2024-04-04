@@ -24,5 +24,5 @@ PRODIGAL:
   drop_sequence_with_N: false
   bypass_Shine_Dalgarno_trainer: false
   mode: meta
-  write_all_potential_genes: ''
-  write_a_training_file: ''
+  write_all_potential_genes: false
+  write_a_training_file: false

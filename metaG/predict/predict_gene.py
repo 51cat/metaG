@@ -43,10 +43,6 @@ class PREDICTer(MinAna):
 
         predict_infc.mk_cmd()
         predict_infc.run_by_py()
-
-        # format
-        #seqtools_run(self.faa_out, do = "format", in_fa=self.faa_out)
-        #seqtools_run(self.ffn_out , do = "format", in_fa=self.ffn_out)
         
         # write json
         self.out_json[self.sample_name]["ffn"] = os.path.abspath(self.ffn_out)

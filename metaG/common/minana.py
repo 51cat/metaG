@@ -9,6 +9,7 @@ class MinAna:
     def __init__(self, outdir, step_name = None, *args, **kwargs) -> None:
         self.outdir = outdir
         self.step_name = step_name
+        self._rubbish = []
 
         for k, v in kwargs.items():
             setattr(self, k, v)
@@ -22,6 +23,10 @@ class MinAna:
             
         else:
             self.parent_dir = None
+
+    def add_rubbish(self, *args):
+        for f in args:
+            self._rubbish.append(f) 
 
     def make_step_outdir(self, dirname):
         subprocess.check_call(f"mkdir -p {self.outdir}/{dirname}", shell = True)
@@ -37,6 +42,14 @@ class MinAna:
         json_str = json.dumps(dict, indent=4)
         with open(out,"w") as fd:
             fd.write(json_str)
+    
+    def clean(self):
+        if len(self._rubbish) == 0:
+            return
+        else:
+            cmds = [f"rm -rf {f}" for f in self._rubbish]
+            self.run_cmds(cmds)
+
 
     @abstractmethod
     def run(self):

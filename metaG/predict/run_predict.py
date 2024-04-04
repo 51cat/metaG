@@ -1,4 +1,4 @@
-from metaG.predict.predict_orf import PREDICTer
+from metaG.predict.predict_gene import PREDICTer
 from metaG.common.minana import MinAna
 from metaG.utils import get_target_dir, get_fa_stat, merge_json_files, seqtools_run
 import json
@@ -18,9 +18,28 @@ class GenePredicter(MinAna):
         self.config_file = config_file
         self.use = use
         self.jsons = []
-        self.orf_fas = []
+        self.gene_fas = []
+        
     
-    def run_pretict(self):
+    def mk_geneset(self, out_geneset):
+        seqtools_run(f"{self.target_dir}/__GeneSet_all.fa", do = "merge", fa_lst=self.gene_fas)
+        seqtools_run(f"{self.target_dir}/GeneSet_all.fa", do = "format", in_fa=f"{self.target_dir}/__GeneSet_all.fa")
+        self.add_rubbish(f"{self.target_dir}/__GeneSet_all.fa")
+        self.add_rubbish(f"{self.target_dir}/GeneSet_all.fa")
+
+        with open(f"{self.target_dir}/GeneSet_all.fa") as fd_in:
+            #with open(f"{self.target_dir}/GeneSet_all_clean.fa", "w") as fd_out:
+            with open(f"{out_geneset}", "w") as fd_out:
+                for line in fd_in.readlines():
+                    if line.startswith(">"):
+                        line = line.split("#")[0].replace(" ", "")
+                        fd_out.write(f"{line}\n")
+                    else:
+                        fd_out.write(line)
+                
+
+    
+    def mk_predict_gene(self):
         with open(self.contig_json, 'r', encoding='utf-8') as fd:
             contig_path_dict = json.load(fd)
         
@@ -35,18 +54,16 @@ class GenePredicter(MinAna):
             )
             runner.run()
             self.jsons.append(runner.predict_json)
-            self.orf_fas.append(runner.ffn)
-            #self.orf_fas.append(runner.faa)
+            self.gene_fas.append(runner.ffn)
         
         clean_contig_dict  = merge_json_files(self.jsons)
-        target_dir = get_target_dir(self.outdir, "predict")
-        self.write_json(clean_contig_dict, f"{target_dir}/clean_gene.json")
-
-        # merge
-        seqtools_run(f"{target_dir}/__GeneSet_all.fa", do = "merge", fa_lst=self.orf_fas)
-        seqtools_run(f"{target_dir}/GeneSet_all.fa", do = "format", in_fa=f"{target_dir}/__GeneSet_all.fa")
-        os.system(f"rm -rf {target_dir}/__GeneSet_all.fa")
+        self.target_dir = get_target_dir(self.outdir, "predict")
+        self.write_json(clean_contig_dict, f"{self.target_dir}/clean_gene.json")
         
         # write stat
-        get_fa_stat(f"{target_dir}/orf_fa_stat.txt", self.orf_fas)
-        
+        get_fa_stat(f"{self.target_dir}/predict_gene_stat.txt", self.gene_fas)
+    
+    def run_predict(self):
+        self.mk_predict_gene()
+        self.mk_geneset(f"{self.target_dir}/GeneSet_clean_all.fa")
+        self.clean()

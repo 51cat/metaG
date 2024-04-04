@@ -70,7 +70,7 @@ def predict_gene(contig_table, outdir, config_file, use):
         use=use,
         config_file=config_file
     )
-    runner.run_pretict()
+    runner.run_predict()
 
 if __name__ == '__main__':
     main()
