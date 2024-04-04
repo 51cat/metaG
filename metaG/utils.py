@@ -63,14 +63,23 @@ def seqtools_run(out_file, do, target_name = None, in_fa= None, fa_lst = None):
         cmd_basic += f" --method {do} "
     subprocess.check_call(cmd_basic, shell=True)
 
-def parse_config_file(config_yaml, key, args_prfx = "--", return_dict = False):
+def parse_config_file(config_yaml, key, args_prfx = "--", return_dict = False, args_json = None):
     flag1 = ["True", "TRUE", "true", "T", "t", True]
     flag2 = ["False", "FALSE", "false", "F", "f", False]
 
     with open(config_yaml,encoding='utf-8') as fd:
         data = yaml.load(fd,Loader=yaml.FullLoader)
     use = data[key]
-    
+
+    if args_json is not None:
+        with open(args_json,encoding='utf-8') as fd:
+            args_dict = json.load(fd)
+        use_new = {}
+        for arg_name, arg_name_true in args_dict.items():
+            use_new.update({arg_name_true:use[arg_name]})
+        
+        use = use_new
+        
     if return_dict:
         return use
     
