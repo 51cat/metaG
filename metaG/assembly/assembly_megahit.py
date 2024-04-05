@@ -5,15 +5,16 @@ from metaG.software.interface import SoftInterface as SIF
 import os
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 
 def draw_histogram(file_path, column_name, output_file):
     df = pd.read_table(file_path)
-    column_data = df[column_name]
+    column_data = np.log10(df[column_name] + 1)
     plt.hist(column_data, bins=100, color='skyblue', alpha=0.8)
     plt.title(f'Histogram of {column_name}')
-    plt.xlabel(column_name)
+    plt.xlabel(f"log10({column_name})")
     plt.ylabel('Frequency')
     plt.savefig(output_file)
     plt.close()
