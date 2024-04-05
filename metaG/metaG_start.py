@@ -28,17 +28,18 @@ def pre_process(rawdata_table, host, host_genome, outdir, config_file):
 
 
 @main.command()
-@click.option('--fq_table', default=None, required=False)
+@click.option('--rawdata_table', default=None, required=False)
 @click.option('--outdir', default='', required=True)
 @click.option('--config_file', required=False, default =None)
 @click.option('--min_contig_len', required=False, default =500)
-def assembly(fq_table, outdir, config_file, min_contig_len):
+def assembly(rawdata_table, outdir, config_file, min_contig_len):
     
-    if fq_table is None:
+    if rawdata_table is None:
         prep_dir = get_target_dir(outdir, "prep")
         fq_json = f"{prep_dir}/clean_data.json"
     else:
-        loadder = DataLoader(fq_table, outdir)
+        loadder = DataLoader(rawdata_table, outdir)
+        loadder.run()
         fq_json = loadder.get_rawdata_json_path()
     
     runner = Assembly(
@@ -51,24 +52,32 @@ def assembly(fq_table, outdir, config_file, min_contig_len):
 
 
 @main.command()
-@click.option('--contig_table', default=None, required=False)
+@click.option('--rawdata_table', default=None, required=False)
 @click.option('--outdir', default='', required=True)
 @click.option('--config_file', required=False, default =None)
 @click.option('--use', required=False, default ="prodigal")
-def predict_gene(contig_table, outdir, config_file, use):
+# unique gene args
+@click.option('--word_size', default=9, required=False)
+@click.option('--identity_threshold', required=False, default =0.95)
+@click.option('--shorter_coverage', required=False, default =0.9)
+def predict_gene(rawdata_table, outdir, config_file, use,word_size, identity_threshold, shorter_coverage):
     
-    if contig_table is None:
+    if rawdata_table is None:
         prep_dir = get_target_dir(outdir, "assembly")
         contig_json = f"{prep_dir}/clean_contig.json"
     else:
-        loadder = DataLoader(contig_table, outdir)
+        loadder = DataLoader(rawdata_table, outdir, mode=2)
+        loadder.run()
         contig_json = loadder.get_rawdata_json_path()
     
     runner = GenePredicter(
         contig_json=contig_json,
         outdir=outdir,
         use=use,
-        config_file=config_file
+        config_file=config_file,
+        word_size=word_size,
+        identity_threshold=identity_threshold,
+        shorter_coverage=shorter_coverage
     )
     runner.run_predict()
 

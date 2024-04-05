@@ -1,5 +1,6 @@
 import subprocess
 import os
+from collections import defaultdict
 
 class SeqProcesser:
     def __init__(self):
@@ -50,7 +51,25 @@ class SeqProcesser:
                 fd.write(f"{k}\t{v}\n")
 
     def format(self):
-        pass
+        cache = 500000
+        cache_dict = defaultdict(lambda:defaultdict(str))
+        with open(self.out_fa, "w") as fd:
+            for line in self.in_fa_iter():
+                if line.startswith(">"):
+                    seq_name = line.strip("\n")
+                    cache_dict.update({seq_name:[]})
+                else:
+                    cache_dict[seq_name].append(line.strip("\n"))
+
+                if len(cache_dict) == cache:
+                    for s_name, s in cache_dict.items():
+                        seq = "".join(s)
+                        fd.write(f"{s_name}\n{seq}\n")
+            
+            if len(cache_dict) != 0:
+                for s_name, s in cache_dict.items():
+                    seq = "".join(s)
+                    fd.write(f"{s_name}\n{seq}\n")
     
     @staticmethod
     def stat(stat_file_out,fa_lst):
@@ -62,19 +81,8 @@ class SeqProcesser:
 
 
     def merge(self, fa_lst):
-        pass
-
-def main():
-    fa = "/home/issas/dev/meta_genome/test/test_preprocess2/02.assembly/megahit_out/test_3/final.contigs.fa"
-    r = SeqProcesser()
-    r.set_in_fa(fa)
-    r.set_out_fa("./test.fa")
-    r.rename("test")
-
-    r.set_in_fa("./test.fa")
-    r.getlen("./res.txt")
-
-    SeqProcesser.stat("./stat.txt",[fa, "./test.fa"] )
-
-if __name__ == '__main__':
-    main()
+        with open(self.out_fa, "w") as fd_out:
+            for file in fa_lst:
+                self.set_in_fa(file)
+                for line in self.in_fa_iter():
+                    fd_out.write(f"{line}\n")
