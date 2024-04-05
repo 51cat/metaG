@@ -19,7 +19,7 @@ class Assembly(MinAna):
         self.min_contig_len = min_contig_len
         self.jsons = []
 
-    def run_assembly(self):
+    def start(self):
         with open(self.fq_json, 'r', encoding='utf-8') as fd:
             fq_path_dict = json.load(fd)
         

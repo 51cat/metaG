@@ -24,7 +24,7 @@ def pre_process(rawdata_table, host, host_genome, outdir, config_file):
         config_file=config_file
         
     )
-    runner.run_preprocessor()
+    runner.start()
 
 
 @main.command()
@@ -48,7 +48,7 @@ def assembly(rawdata_table, outdir, config_file, min_contig_len):
         min_contig_len=min_contig_len,
         config_file=config_file
     )
-    runner.run_assembly()
+    runner.start()
 
 
 @main.command()
@@ -79,7 +79,7 @@ def predict_gene(rawdata_table, outdir, config_file, use,word_size, identity_thr
         identity_threshold=identity_threshold,
         shorter_coverage=shorter_coverage
     )
-    runner.run_predict()
+    runner.start()
 
 if __name__ == '__main__':
     main()

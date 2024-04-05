@@ -92,7 +92,7 @@ class GenePredicter(MinAna):
     def write_clean_geneset_json(self):
         self.write_json(self.geneset_dict , f"{self.target_dir}/GeneSet.json")
 
-    def run_predict(self):
+    def start(self):
         self.mk_predict_gene()
         self.mk_geneset(f"{self.target_dir}/GeneSet_clean_all.fa")
         self.mk_unique_geneset()

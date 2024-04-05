@@ -89,7 +89,7 @@ class DataPreProcessor:
             reads.append(dict_merge_host[k]["R2"])
         SeqProcesser.stat(f"{prep_dir}/qc_fa_stat.txt", reads)
         
-    def run_preprocessor(self):
+    def start(self):
         self.load_rawdata()
         self.index_host()
         self.qc_rawdata()
