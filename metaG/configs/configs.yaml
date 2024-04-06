@@ -1,5 +1,5 @@
 Trimmomatic:
-  adapter_fa: ''
+  adapter_fa: './data/TruSeq3-PE.fa'
   mismatch: 2
   match_pct: 30
   match_pct_force: 10 

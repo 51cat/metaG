@@ -18,5 +18,6 @@ setup(
         [console_scripts]
         metaG=metaG.metaG_start:main
         get_config=metaG.cmd.get_config:main
+        metaG_run=metaG.cmd.metaG_run:main
     """
 )
