@@ -55,7 +55,9 @@ def main():
             r2 = args.r2,
             out = args.out,
             config_file = args.config_file,
-            min_contig_len=args.min_contig_len
+            min_contig_len=args.min_contig_len,
+            cpu = args.cpu,
+            memory = args.memory
     )
 
     runner.run()

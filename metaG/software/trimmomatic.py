@@ -106,7 +106,8 @@ def main():
         out = args.out,
         phred = args.phred,
         sample_name = args.sample_name,
-        config_file=args.config_file
+        config_file=args.config_file,
+        cpu = args.cpu
     )
 
     runner.run()
