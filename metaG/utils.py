@@ -23,6 +23,9 @@ def merge_fastqc_res(facstqc_dir, outdir):
     cmd = f"multiqc {facstqc_dir} -o {outdir}"
     subprocess.check_call(cmd, shell=True)
 
+def get_default_cpus():
+    import multiprocessing
+    return min(64, multiprocessing.cpu_count())
 
 def get_target_dir(res_outdir, step_name, sub_step = ""):
     if sub_step == "":

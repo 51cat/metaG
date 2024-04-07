@@ -3,7 +3,7 @@ import subprocess
 from abc import abstractmethod
 import os
 import json
-from metaG.utils import get_target_dir
+from metaG.utils import get_target_dir, get_default_cpus
 from multiprocessing import Pool
 
 class MinAna:
@@ -11,12 +11,17 @@ class MinAna:
         self.outdir = outdir
         self.step_name = step_name
         self._rubbish = []
+        self.cpu = get_default_cpus()
+        self.memory = None
 
         for k, v in kwargs.items():
             setattr(self, k, v)
         
         if not os.path.exists(self.outdir):
            subprocess.check_call(f'mkdir -p {self.outdir}', shell = True)
+
+    def set_cpu(self, ncpu):
+        self.cpu = ncpu
 
     def prep_start(self):
         if self.step_name is not None:

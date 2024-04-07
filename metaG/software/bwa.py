@@ -4,7 +4,7 @@ from metaG.common.log import add_log
 import os
 import glob
 import metaG
-import multiprocessing
+from metaG.utils import get_default_cpus
 
 BWA_PATH = f"{os.path.dirname(metaG.__file__)}/lib/softs/bwa/bwa"
 
@@ -15,7 +15,9 @@ class bwa:
                  genome_dir = None, 
                  r1 = None, 
                  r2 = None,
-                 out = None
+                 out = None,
+                 cpu = None,
+                 memory = None
                  ) -> None:
         
         self.host = host
@@ -24,11 +26,9 @@ class bwa:
         self.r1 = r1
         self.r2 = r2
         self.out = out
-        self.threads = min(64, multiprocessing.cpu_count())
-    
-    def pre_check(self):
-        pass
-    
+        self.cpu = cpu
+        self.memory = memory
+
     @add_log
     def index(self):
         self.index.logger.info(f"Start Index: fa: {self.host}.fa")
@@ -38,10 +38,14 @@ class bwa:
         subprocess.check_call(cmd2, shell=True)
 
     def mem(self, out_file_name):
-        genome_fa = glob.glob(f"{self.genome_dir}/{self.host}.fasta")[0]
+        print(f"{self.genome_dir}/{self.host}")
+        try:
+            genome_fa = glob.glob(f"{self.genome_dir}/{self.host}.fasta")[0]
+        except IndexError:
+            genome_fa = glob.glob(f"{self.genome_dir}/{self.host}.fa")[0]
         cmd = (
-            f"{BWA_PATH} mem -t {self.threads} -M {genome_fa} {self.r1} {self.r2} | "
-            f"samtools view -@{self.threads} -b > {out_file_name}"
+            f"{BWA_PATH} mem -t {self.cpu} -M {genome_fa} {self.r1} {self.r2} | "
+            f"samtools view -@{self.cpu} -b > {out_file_name}"
         )
         subprocess.check_call(cmd, shell=True)
 
@@ -56,6 +60,7 @@ def main():
     parser.add_argument('--r2', help='')
     parser.add_argument('--out', help='')
     parser.add_argument('--mem_out_file_name', help='')
+    parser.add_argument('--cpu', default=get_default_cpus(), help='')
     
     args = parser.parse_args()
 
@@ -65,10 +70,9 @@ def main():
         args.genome_dir,
         args.r1,
         args.r2,
-        args.out
+        args.out,
+        cpu=args.cpu
     )
-
-    runner.pre_check()
     
     if args.mode == "index":
         runner.index()
