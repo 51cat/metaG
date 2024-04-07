@@ -4,6 +4,7 @@ from metaG.common.log import add_log
 import os
 import metaG
 from metaG.utils import parse_config_file
+from metaG import get_default_cpus
 
 MEGAHIT_PATH = f"{os.path.dirname(metaG.__file__)}/lib/softs/MEGAHIT/bin/megahit"
 
@@ -13,7 +14,9 @@ class MEGAHIT:
                  r2 = None,
                  out = None,
                  config_file = None,
-                 min_contig_len = 500
+                 min_contig_len = 500,
+                 cpu = None,
+                 memory = None
                  ) -> None:
         
         self.r1 = r1
@@ -21,10 +24,12 @@ class MEGAHIT:
         self.out = out
         self.min_contig_len = min_contig_len
         self.config_file = config_file
+        self.cpu = cpu
+        self.memory = memory
     
     def run(self):
         cmd = (
-            f"{MEGAHIT_PATH} -1 {self.r1} -2 {self.r2} -o {self.out} --min-contig-len {self.min_contig_len} "
+            f"{MEGAHIT_PATH} -1 {self.r1} -2 {self.r2} -o {self.out} --min-contig-len {self.min_contig_len} --num-cpu-threads {self.cpu} --memory {self.memory} "
         )
         if self.config_file  not in [ None, "None"]:
             advance_args = parse_config_file(self.config_file, "MEGAHIT")
@@ -40,6 +45,8 @@ def main():
     parser.add_argument('--out', help='', required=True)
     parser.add_argument('--config_file', help='', required=False, default= None)
     parser.add_argument('--min_contig_len', help='', required=False, default= 500)
+    parser.add_argument('--cpu', help='', required=False, default= get_default_cpus())
+    parser.add_argument('--memory', help='', required=False, default= 0.9)
     
     args = parser.parse_args()
 

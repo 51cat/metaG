@@ -8,8 +8,6 @@ Trimmomatic:
   plate: 'ILLUMINACLIP'
 
 MEGAHIT:
-  memory: 0.9
-  num-cpu-threads: 128
   k-min: 21
   k-max: 141
   k-step: 10

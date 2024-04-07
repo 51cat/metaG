@@ -7,9 +7,7 @@ import re
 import json
 from metaG.utils import parse_config_file
 from collections import defaultdict
-
-import multiprocessing
-
+from metaG import get_default_cpus
 
 ADAPTER = f"ILLUMINACLIP:{os.path.dirname(metaG.__file__)}/lib/adapters/TruSeq3-PE.fa:2:30:10 SLIDINGWINDOW:4:15 MINLEN:75"
 
@@ -31,14 +29,17 @@ class Trimmomatic:
                  sample_name = None,
                  out = None,
                  phred = "phred33",
-                 config_file = None
+                 config_file = None,
+                 cpu = None,
+                 memory = None
                  ) -> None:
         
         self.r1 = r1
         self.r2 = r2
         self.sample_name = sample_name
         self.out = out
-        self.threads = min(64, multiprocessing.cpu_count())
+        self.cpu = cpu
+        self.memory = memory
         self.phred = phred
         self._adapter = ADAPTER
         self.config_file = config_file
@@ -75,7 +76,7 @@ class Trimmomatic:
 
         cmd = (
             f"trimmomatic PE "
-            f"-threads {self.threads} "
+            f"-threads {self.cpu} "
             f"-{self.phred} "
             f"{self.r1} {self.r2} "
             f"{self.out_r1_pair} {self.out_r1_unpair} {self.out_r2_pair} {self.out_r2_unpair} \\"
@@ -96,6 +97,7 @@ def main():
     parser.add_argument('--sample_name', help='', required=True)
     parser.add_argument('--phred', help='', default="phred33")
     parser.add_argument('--config_file', help='', default=None)
+    parser.add_argument('--cpu', help='', default=get_default_cpus())
     args = parser.parse_args()
 
     runner = Trimmomatic(
