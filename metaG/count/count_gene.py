@@ -4,6 +4,7 @@ from collections import defaultdict
 from metaG.utils import get_software_path
 from metaG.software.interface import SoftInterface as SIF
 import pysam
+from functools import partial
 
 class GeneCounter(MinAna):
     def __init__(self,
@@ -30,7 +31,7 @@ class GeneCounter(MinAna):
         self.make_step_outdir(self._steps_dir)
         self.prep_start()
 
-        self.count_dict = defaultdict(lambda:defaultdict(int))
+        self.count_dict = defaultdict(partial(defaultdict, int))
         self.out_bam = f"{self.step_outdir}/{self.sample_name}.bam"
         self.count_reads_json = f"{self.step_outdir}/{self.sample_name}_raw_reads.json"
     

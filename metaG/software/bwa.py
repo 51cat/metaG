@@ -4,7 +4,7 @@ from metaG.common.log import add_log
 import os
 import glob
 import metaG
-from metaG.utils import get_default_cpus
+from metaG import get_default_cpus
 
 BWA_PATH = f"{os.path.dirname(metaG.__file__)}/lib/softs/bwa/bwa"
 
@@ -38,11 +38,12 @@ class bwa:
         subprocess.check_call(cmd2, shell=True)
 
     def mem(self, out_file_name):
-        print(f"{self.genome_dir}/{self.host}")
+        
         try:
             genome_fa = glob.glob(f"{self.genome_dir}/{self.host}.fasta")[0]
         except IndexError:
             genome_fa = glob.glob(f"{self.genome_dir}/{self.host}.fa")[0]
+        print(f"{genome_fa}")
         cmd = (
             f"{BWA_PATH} mem -t {self.cpu} -M {genome_fa} {self.r1} {self.r2} | "
             f"samtools view -@{self.cpu} -b > {out_file_name}"
