@@ -44,7 +44,6 @@ class DataPreProcessor:
         runner.run()
     
     def qc_rawdata(self):
-        # 暂时不加多进程, 方便debug
         for sample_name in self.rawdata_json.keys():
             r1 = self.rawdata_json[sample_name]["R1"]
             r2 = self.rawdata_json[sample_name]["R2"]
