@@ -1,7 +1,7 @@
 import json
 import glob
 import pandas as pd
-from metaG.utils import merge_json_files
+from metaG.utils import merge_json_files, merge_fastqc_res
 
 from metaG.tools.seqtools import SeqProcesser
 from metaG.core.minana import MinAna
@@ -9,6 +9,7 @@ from metaG.core.dataload import DataLoader
 from metaG.tools.index_host import IndexHost
 from metaG.tools.qc import QCer
 from metaG.tools.host_remove import HostRemover
+from metaG.softs.fastqc import Fastqc
 
 class DataPreProcessor(MinAna):
     def __init__(self, 
@@ -38,21 +39,25 @@ class DataPreProcessor(MinAna):
         self._qc_dir = "01.prep/qc/"
         self._host_index_dir = "01.prep/host_index/"
         self._host_remove_dir = "01.prep/host_remove/"
+        self._fastqc_dir = "01.prep/fastqc/"
 
         self.qc_outdir = f"{self.outdir}/{self._qc_dir}/"
         self.host_index_dir = f"{self.outdir}/{self._host_index_dir}/"
         self.host_remove_dir = f"{self.outdir}/{self._host_remove_dir}/"
+        self.fastqc_dir = f"{self.outdir}/{self._fastqc_dir}/"
 
 
         self.make_step_outdir(self._qc_dir)
         self.make_step_outdir(self._host_index_dir)
         self.make_step_outdir(self._host_remove_dir)
+        self.make_step_outdir(self._fastqc_dir)
         
         self.prep_start()
         
         self.prep_stat = f"{self.parent_dir}/prep_stat.txt"
         self.host_count_file = f"{self.parent_dir}/host_count.tsv"
         self.clean_fq_json = f"{self.parent_dir}/clean_fastq.json"
+        
 
         self.qc_tasks = []
         self.host_remove_tasks = []
@@ -127,6 +132,19 @@ class DataPreProcessor(MinAna):
         )
         merge_count_res.to_csv(self.host_count_file, sep = "\t", index=None)  
 
+    def generate_qc_report(self):
+        with open(self.clean_fq_json) as fd:
+            clean_fq_dict = json.load(fd)
+        print(clean_fq_dict)
+        for sample_name in clean_fq_dict.keys():
+            runner = Fastqc(
+                r1 = clean_fq_dict[sample_name]["R1"],
+                r2 = clean_fq_dict[sample_name]["R2"],
+                out=self.fastqc_dir)
+            runner.run()
+        # merge
+        merge_fastqc_res(self.fastqc_dir, self.parent_dir)
+
     def start(self):
         self.load_rawdata()
         self.index_host()
@@ -135,6 +153,7 @@ class DataPreProcessor(MinAna):
         self.make_host_remove_tasks()
         self.run_tasks(self.host_remove_tasks, self.parallel)
         self.make_preprocess_stat()
+        self.generate_qc_report()
 
 
 def main():

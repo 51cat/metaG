@@ -1,6 +1,6 @@
 import argparse
 import subprocess
-from metaG.common.log import add_log
+from metaG.core.log import add_log
 import os
 import metaG
 
