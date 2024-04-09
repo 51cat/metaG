@@ -13,7 +13,9 @@ class PRODIGAL:
                  faa_out,
                  ffn_out,
                  out,
-                 config_file = None
+                 config_file = None,
+                 cpu = None,
+                 memory = None
                  ) -> None:
         
         self.contig_file = contig_file
@@ -21,6 +23,8 @@ class PRODIGAL:
         self.ffn_out = ffn_out
         self.out = out
         self.config_file = config_file
+        self.cpu = cpu
+        self.memory = memory
     
     def run(self):
         cmd = (
@@ -31,27 +35,3 @@ class PRODIGAL:
             cmd += advance_args
         
         subprocess.check_call(cmd, shell=True)
-        
-
-def main():
-    parser = argparse.ArgumentParser(description='Warpper for fastqc')
-    parser.add_argument('--contig_file', help='', required=True)
-    parser.add_argument('--faa_out', help='', required=True)
-    parser.add_argument('--ffn_out', help='', required=True)
-    parser.add_argument('--out', help='', required=False, default= None)
-    parser.add_argument('--config_file', help='', required=False, default= None)
-    
-    args = parser.parse_args()
-
-    runner = PRODIGAL(
-                 contig_file = args.contig_file,
-                 faa_out = args.faa_out,
-                 ffn_out = args.ffn_out,
-                 out = args.out,
-                 config_file = args.config_file
-    )
-
-    runner.run()
-    
-if __name__ == '__main__':
-    main()

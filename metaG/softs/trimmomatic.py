@@ -1,13 +1,11 @@
-import argparse
 import subprocess
-from metaG.common.log import add_log
+from metaG.core.log import add_log
 import os
 import metaG
-import re
 import json
 from metaG.utils import parse_config_file
 from collections import defaultdict
-from metaG import get_default_cpus
+from functools import partial
 
 ADAPTER = f"ILLUMINACLIP:{os.path.dirname(metaG.__file__)}/lib/adapters/TruSeq3-PE.fa:2:30:10 SLIDINGWINDOW:4:15 MINLEN:75"
 
@@ -43,7 +41,7 @@ class Trimmomatic:
         self.phred = phred
         self._adapter = ADAPTER
         self.config_file = config_file
-        self._reads_dict = defaultdict(lambda: defaultdict(str))
+        self._reads_dict = defaultdict(partial(defaultdict, str))
     
 
     def mk_outdir(self):
@@ -86,31 +84,3 @@ class Trimmomatic:
         
         with open(f"{self.out}/{self.sample_name}_trimmomatic_stat.json", "w") as fd:
             json.dump(self._reads_dict, fd, indent=4)
-
-        
-
-def main():
-    parser = argparse.ArgumentParser(description='Warpper for trimmomatic')
-    parser.add_argument('--r1', help='', required=True)
-    parser.add_argument('--r2', help='', required=True)
-    parser.add_argument('--out', help='', required=True)
-    parser.add_argument('--sample_name', help='', required=True)
-    parser.add_argument('--phred', help='', default="phred33")
-    parser.add_argument('--config_file', help='', default=None)
-    parser.add_argument('--cpu', help='', default=get_default_cpus())
-    args = parser.parse_args()
-
-    runner = Trimmomatic(
-        r1 = args.r1,
-        r2 = args.r2,
-        out = args.out,
-        phred = args.phred,
-        sample_name = args.sample_name,
-        config_file=args.config_file,
-        cpu = args.cpu
-    )
-
-    runner.run()
-    
-if __name__ == '__main__':
-    main()

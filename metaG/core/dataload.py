@@ -1,9 +1,9 @@
 import json
 from collections import defaultdict
 import os
-from metaG.common.minana import MinAna
+from metaG.core.minana import MinAna
 import re
-from metaG.common.log import add_log
+from metaG.core.log import add_log
 
 class DataLoader(MinAna):
     def __init__(self, data_table, outdir, mode = 1) -> None:
@@ -53,9 +53,6 @@ class DataLoader(MinAna):
     def write_json(self):
         with open(f"{self.outdir}/00.rawdata/raw_data.json", "w") as fd:
             json.dump(self.mode_dict, fd, indent=4)
-    
-    def get_rawdata_json_path(self):
-        return f"{self.outdir}/00.rawdata/raw_data.json"
 
     def run(self):
         if self.mode == 1:
@@ -65,3 +62,7 @@ class DataLoader(MinAna):
         
         self.link_data()
         self.write_json()
+
+    @property    
+    def rawdata_json(self):
+        return f"{self.outdir}/00.rawdata/raw_data.json"

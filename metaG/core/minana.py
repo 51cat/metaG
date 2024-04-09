@@ -13,7 +13,7 @@ def run_single_task(task):
 
 
 class MinAna:
-    def __init__(self, outdir, step_name = None, *args, **kwargs) -> None:
+    def __init__(self, outdir, step_name = None, skip_mk_outdir=False ,*args, **kwargs) -> None:
         self.outdir = outdir
         self.step_name = step_name
         self._rubbish = []
@@ -23,8 +23,9 @@ class MinAna:
         for k, v in kwargs.items():
             setattr(self, k, v)
         
-        if not os.path.exists(self.outdir):
-           subprocess.check_call(f'mkdir -p {self.outdir}', shell = True)
+        if not skip_mk_outdir:
+            if not os.path.exists(self.outdir):
+                subprocess.check_call(f'mkdir -p {self.outdir}', shell = True)
 
     def set_cpu(self, ncpu):
         self.cpu = ncpu
@@ -62,8 +63,8 @@ class MinAna:
             cmds = [f"rm -rf {f}" for f in self._rubbish]
             self.run_cmds(cmds)
 
-    def compress_file(self, *files):
-        cmds = [f"gzip {f}" for f in files]
+    def compress_file(self, files_lst):
+        cmds = [f"gzip {f}" for f in files_lst]
         with Pool(processes=len(cmds)) as pool:
             pool.map(os.system, cmds)
         pool.close()
@@ -82,7 +83,8 @@ class MinAna:
             pool.join()
         else:
             for t in task_lst:
-                t.set_cpu(self.cpu)
+                t.set_cpu(get_default_cpus())
+                t.run()
 
     @abstractmethod
     def run(self):
