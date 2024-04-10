@@ -1,9 +1,7 @@
-import argparse
 import subprocess
 import os
 import metaG
 from metaG.utils import parse_config_file
-import multiprocessing
 
 CD_HIT_PATH = f"{os.path.dirname(metaG.__file__)}/lib/softs/cd-hit/cd-hit-est"
 ARGS_JSON = f"{os.path.dirname(metaG.__file__)}/lib/softs/cd-hit/args.json"
@@ -15,15 +13,18 @@ class CD_HIT:
                  word_size = 9,
                  identity_threshold = 0.95,
                  shorter_coverage = 0.9,
-                 config_file = None
+                 config_file = None,
+                 cpu = None,
+                 memeory = None
                  ) -> None:
         self.in_fa = in_fa
         self.out_fa = out_fa
         self.word_size = word_size
         self.identity_threshold = identity_threshold
         self.shorter_coverage = shorter_coverage
-        self.threads = min(64, multiprocessing.cpu_count())
-
+        self.config_file = config_file
+        self.cpu = cpu
+        self.memeory = memeory
         self.config_file = None
     
     def run(self):
@@ -37,7 +38,7 @@ class CD_HIT:
             f"-d 0 "
             f"-aS {self.shorter_coverage} "
             f"-r 0 "
-            f"-T {self.threads} "
+            f"-T {self.cpu} "
 
         )
         if self.config_file  not in [ None, "None"]:

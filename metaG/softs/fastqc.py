@@ -16,9 +16,13 @@ class Fastqc:
         self.r1 = r1
         self.r2 = r2
         self.out = out
+        self.cpu = metaG.get_default_cpus()
+    
+    def set_cpu(self, ncpu):
+        self.cpu  = ncpu
 
     def run(self):
         cmd = (
-            f"{FASTQC_PATH} -o {self.out}  {self.r1} {self.r2}"
+            f"{FASTQC_PATH} -t {self.cpu} -o {self.out}  {self.r1} {self.r2}"
         )
         subprocess.check_call(cmd, shell=True)

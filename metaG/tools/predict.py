@@ -39,7 +39,7 @@ class Predicter(MinAna):
                  faa_out = self._faa_out,
                  ffn_out = self._ffn_out,
                  out = self._anno,
-                 config_file = None,
+                 config_file = self.config_file,
                  cpu = self.cpu,
                  memory = self.memory
         )
@@ -48,7 +48,7 @@ class Predicter(MinAna):
         self.out_json[self.sample_name]["ffn"] = os.path.abspath(self._ffn_out)
         self.out_json[self.sample_name]["faa"] = os.path.abspath(self._faa_out)
         self.write_json(self.out_json, f"{self.outdir}/{self.sample_name}_predict.json")
-    
+
     @property
     def faa(self):
          return self._faa_out

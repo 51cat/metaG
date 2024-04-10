@@ -1,6 +1,7 @@
 import click
 from metaG.tools.preprocess import DataPreProcessor
 from metaG.genome.genome_assembly import GenomeAssembly
+from metaG.genome.genome_predict import GenomoPredict
 from metaG.core.dataload import DataLoader
 from metaG.utils import get_target_dir
 
@@ -56,6 +57,38 @@ def assembly(rawdata_table, outdir, config_file, min_contig_len,assembly_use,par
         config_file=config_file,
         assembly_use=assembly_use,
         parallel=parallel
+    )
+    runner.start()
+
+@main.command()
+@click.option('--rawdata_table', default=None, required=False)
+@click.option('--outdir', default='', required=True)
+@click.option('--predict_use', required=False, default ="prodigal")
+@click.option('--word_size', required=False, default =9)
+@click.option('--identity_threshold', required=False, default =0.95)
+@click.option('--shorter_coverage', required=False, default =0.9)
+@click.option('--config_file', required=False, default =None)
+@click.option('--parallel', required=False, is_flag=True)
+def predict(rawdata_table, outdir, predict_use, word_size,
+            identity_threshold,shorter_coverage,config_file,parallel):
+    
+    if rawdata_table is None:
+        assembly_dir = get_target_dir(outdir, "assembly")
+        clean_contig_json = f"{assembly_dir}/clean_contig.json"
+    else:
+        loadder = DataLoader(rawdata_table, outdir,mode=2)
+        loadder.run()
+        clean_contig_json = loadder.rawdata_json   
+    
+    runner = GenomoPredict(
+       contig_json=clean_contig_json,
+        predict_use = predict_use,
+        outdir= outdir ,
+        word_size = word_size,
+        identity_threshold = identity_threshold,
+        shorter_coverage = shorter_coverage,
+        config_file = config_file,
+        parallel = parallel
     )
     runner.start()
 

@@ -61,6 +61,7 @@ class DataPreProcessor(MinAna):
 
         self.qc_tasks = []
         self.host_remove_tasks = []
+        self.generate_qc_report_task_lst = []
 
     def load_rawdata(self):
         runner = DataLoader(
@@ -132,7 +133,7 @@ class DataPreProcessor(MinAna):
         )
         merge_count_res.to_csv(self.host_count_file, sep = "\t", index=None)  
 
-    def generate_qc_report(self):
+    def make_generate_qc_report_tasks(self):
         with open(self.clean_fq_json) as fd:
             clean_fq_dict = json.load(fd)
         print(clean_fq_dict)
@@ -141,9 +142,7 @@ class DataPreProcessor(MinAna):
                 r1 = clean_fq_dict[sample_name]["R1"],
                 r2 = clean_fq_dict[sample_name]["R2"],
                 out=self.fastqc_dir)
-            runner.run()
-        # merge
-        merge_fastqc_res(self.fastqc_dir, self.parent_dir)
+            self.generate_qc_report_task_lst.append(runner)
 
     def start(self):
         self.load_rawdata()
@@ -153,7 +152,10 @@ class DataPreProcessor(MinAna):
         self.make_host_remove_tasks()
         self.run_tasks(self.host_remove_tasks, self.parallel)
         self.make_preprocess_stat()
-        self.generate_qc_report()
+        self.make_generate_qc_report_tasks()
+        self.run_tasks(self.generate_qc_report_task_lst, self.parallel)
+        # merge
+        merge_fastqc_res(self.fastqc_dir, self.parent_dir)
 
 
 def main():
