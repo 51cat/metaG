@@ -84,7 +84,7 @@ class GenomoPredict(MinAna):
             self.predict_tasks_lst.append(runner)
 
             self.jsons.append(runner.predict_json)
-            self.gene_fas.append(runner.ffn)
+            self.gene_fas.append(runner.faa)
         
     def make_predict_stat(self):
         clean_contig_dict  = merge_json_files(self.jsons)
