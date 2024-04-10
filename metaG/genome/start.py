@@ -2,6 +2,7 @@ import click
 from metaG.tools.preprocess import DataPreProcessor
 from metaG.genome.genome_assembly import GenomeAssembly
 from metaG.genome.genome_predict import GenomoPredict
+from metaG.genome.genome_annotation import GenomeAnnotation
 from metaG.core.dataload import DataLoader
 from metaG.utils import get_target_dir
 
@@ -89,6 +90,46 @@ def predict(rawdata_table, outdir, predict_use, word_size,
         shorter_coverage = shorter_coverage,
         config_file = config_file,
         parallel = parallel
+    )
+    runner.start()
+
+
+@main.command()
+@click.option('--uniq_fa', default=None, required=False)
+@click.option('--outdir', default='', required=True)
+@click.option('--database_use', required=True, default =None)
+@click.option('--annota_use', required=False, default ='diamond')
+@click.option('--method', required=False, default ='blastp')
+@click.option('--min_evalue', required=False, default =0.00001)
+@click.option('--min_identity', required=False, default =80)
+@click.option('--format', required=False, default =6)
+@click.option('--max_target_seqs', required=False, default =10)
+@click.option('--block_size', required=False, default =8)
+@click.option('--config_file', required=False, default =None)
+@click.option('--parallel', required=False, is_flag=True)
+def ann(uniq_fa, outdir, database_use, annota_use,
+            method,min_evalue,min_identity,format,max_target_seqs,
+            block_size,config_file,parallel):
+    
+    if uniq_fa is None:
+        predict_dir = get_target_dir(outdir, "predict")
+        uniqu_gene_fa = f"{predict_dir}/GeneSet_unique.fa"
+    else:
+        uniqu_gene_fa = uniq_fa
+    
+    runner = GenomeAnnotation(
+            uniq_fa= uniqu_gene_fa,
+            outdir= outdir ,
+            database_use=database_use,
+            config_file = config_file,
+            annota_use = annota_use,
+            method = method,
+            min_evalue= min_evalue,
+            min_identity = min_identity,
+            format = format,
+            max_target_seqs = max_target_seqs,
+            block_size = block_size,
+            parallel = parallel
     )
     runner.start()
 

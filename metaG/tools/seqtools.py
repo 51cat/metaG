@@ -41,10 +41,10 @@ class SeqProcesser:
             for line in self.in_fa_iter():
                 if line.startswith(">"):
                     seq_name = line
-                    len_dict.update({seq_name:0})
+                    len_dict.update({seq_name.replace(">", ""):0})
                 else:
                     seq_len = len(line)
-                    len_dict.update({seq_name:seq_len})
+                    len_dict.update({seq_name.replace(">", ""):seq_len})
                 
             
             for k, v in len_dict.items():
