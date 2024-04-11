@@ -1,6 +1,7 @@
 from metaG.tools.count import GeneCounter
 from metaG.tools.gene_count_transfer import GeneAnn, GeneTransfer
 from metaG.core.minana import MinAna
+from metaG.core.log import add_log
 from metaG.utils import merge_json_files
 import json
 import os
@@ -56,6 +57,7 @@ class GenomoCount(MinAna):
         self.raw_count_dict = merge_json_files(self.sample_count_jsons)
         self.write_json(self.raw_count_dict, self.raw_count_json)
 
+    @add_log
     def make_final_count(self):
         with open(self.gene_info_all) as fd:
             gene_info_all_dict = json.load(fd)
@@ -80,6 +82,7 @@ class GenomoCount(MinAna):
             gfs.save("df", f"{res_out}/cpm.tsv", gfs.cpm)
             gfs.save("df", f"{res_out}/tpm.tsv", gfs.tpm)
             gfs.save("df", f"{res_out}/reads.tsv", gfs.count_dict)
+            self.make_final_count.logger.info(f"finish {database_name}")
 
 
     def start(self):

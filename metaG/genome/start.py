@@ -3,7 +3,9 @@ from metaG.tools.preprocess import DataPreProcessor
 from metaG.genome.genome_assembly import GenomeAssembly
 from metaG.genome.genome_predict import GenomoPredict
 from metaG.genome.genome_annotation import GenomeAnnotation
+from metaG.genome.genome_count import GenomoCount
 from metaG.core.dataload import DataLoader
+
 from metaG.utils import get_target_dir
 
 @click.group()
@@ -138,6 +140,40 @@ def ann(query_fa, uniq_gene_fa, outdir, database_use, annota_use,
             parallel = parallel
     )
     runner.start()
+
+@main.command()
+@click.option('--rawdata_table', default=None, required=False)
+@click.option('--outdir', default='', required=True)
+@click.option('--db_ann_dir', default=None, required=False)
+@click.option('--genome_fa', required=False, default =None)
+@click.option('--parallel', required=False, is_flag=True)
+def count(rawdata_table, outdir, db_ann_dir, genome_fa, parallel):
+    if rawdata_table is None:
+        prep_dir = get_target_dir(outdir, "prep")
+        fq_json = f"{prep_dir}/clean_fastq.json"
+    else:
+        loadder = DataLoader(rawdata_table, outdir,mode=1)
+        loadder.run()
+        fq_json = loadder.rawdata_json   
+    
+    if db_ann_dir is None:
+        ann_dir = get_target_dir(outdir, "annotation")
+    else:
+        ann_dir = db_ann_dir
+    
+    if genome_fa is None:
+        predict_dir =  get_target_dir(outdir, "predict")
+        genome_fa = f"{predict_dir}/GeneSet_unique.fa"
+
+    runner = GenomoCount(
+        fq_json = fq_json,
+        ann_dir = ann_dir,
+        outdir=outdir,
+        genome_fa=genome_fa,
+        parallel = parallel
+    )
+    runner.start()
+
 
 if __name__ == '__main__':
     main()
