@@ -3,9 +3,28 @@ import numpy as np
 from collections import defaultdict
 import json
 
+class GeneAnn:
+    def __init__(self, count_dict, ann_dict) -> None:
+        self.count_dict = count_dict
+        self.ann_dict = ann_dict
+        self._new_count_dict = defaultdict(lambda: defaultdict(int))
+       
+    def ann(self):
+        for sample_name in self.count_dict.keys():
+            for gene, _ in self.count_dict[sample_name].items():
+                try:
+                    new_gene_name = self.ann_dict[gene]
+                    self._new_count_dict[sample_name][new_gene_name] += self.count_dict[sample_name][gene]
+                except KeyError:
+                    pass
+    @property
+    def ann_count_dict(self):
+        return self._new_count_dict
+
+
 class GeneTransfer:
     """
-    count_json:
+    count_dict:
         {
             "sample_1":{
                 "gene_1": 100,
@@ -24,7 +43,6 @@ class GeneTransfer:
         self.count_dict = count_dict
         self.length_dict = length_dict
         
-        
         self.fpkm_dict = defaultdict(lambda: defaultdict(int))
         self.cpm_dict = defaultdict(lambda: defaultdict(int))
         self.tpm_dict = defaultdict(lambda: defaultdict(int))
@@ -34,7 +52,7 @@ class GeneTransfer:
             counts = list(self.count_dict[sample_name].values())
             genes = list(self.count_dict[sample_name].keys())
             total = sum(counts)
-
+            
             fpkms = map(
                 lambda x, y: (x*10e9)/(self.length_dict[y]*total), counts, genes
             )
@@ -49,7 +67,7 @@ class GeneTransfer:
             genes = list(self.count_dict[sample_name].keys())
             
             tpms = map(
-                lambda x, y: (x*10e9)/(self.length_dict[x]*(np.sum(x/self.length_dict[y]))), counts, genes
+                lambda x, y: (x*10e9)/(self.length_dict[y]*(np.sum(x/self.length_dict[y]))), counts, genes
             )
             for gene, tpm in zip(genes, tpms):
                 self.tpm_dict[sample_name].update({gene:tpm})
