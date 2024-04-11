@@ -79,6 +79,11 @@ class SeqProcesser:
         cmd = f"{seqkit_exec} stat {files} -b -a > {stat_file_out}"
         subprocess.check_call(cmd, shell=True)
 
+    def to_protein(self, table_code = 11):
+        import metaG
+        seqkit_exec = f"{os.path.dirname(metaG.__file__)}/lib/softs/seqkit/seqkit"
+        cmd = f'{seqkit_exec} translate {self.in_fa} -T {table_code} --trim > {self.out_fa}'
+        subprocess.check_call(cmd, shell=True)
 
     def merge(self, fa_lst):
         with open(self.out_fa, "w") as fd_out:

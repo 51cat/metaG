@@ -68,10 +68,11 @@ def assembly(rawdata_table, outdir, config_file, min_contig_len,assembly_use,par
 @click.option('--word_size', required=False, default =9)
 @click.option('--identity_threshold', required=False, default =0.95)
 @click.option('--shorter_coverage', required=False, default =0.9)
+@click.option('--translate_table', required=False, default =11)
 @click.option('--config_file', required=False, default =None)
 @click.option('--parallel', required=False, is_flag=True)
 def predict(rawdata_table, outdir, predict_use, word_size,
-            identity_threshold,shorter_coverage,config_file,parallel):
+            identity_threshold,translate_table,shorter_coverage,config_file,parallel):
     
     if rawdata_table is None:
         assembly_dir = get_target_dir(outdir, "assembly")
@@ -89,13 +90,15 @@ def predict(rawdata_table, outdir, predict_use, word_size,
         identity_threshold = identity_threshold,
         shorter_coverage = shorter_coverage,
         config_file = config_file,
+        table_code=translate_table,
         parallel = parallel
     )
     runner.start()
 
 
 @main.command()
-@click.option('--uniq_fa', default=None, required=False)
+@click.option('--query_fa', default=None, required=False)
+@click.option('--uniq_gene_fa', default=None, required=False)
 @click.option('--outdir', default='', required=True)
 @click.option('--database_use', required=True, default =None)
 @click.option('--annota_use', required=False, default ='diamond')
@@ -107,18 +110,21 @@ def predict(rawdata_table, outdir, predict_use, word_size,
 @click.option('--block_size', required=False, default =8)
 @click.option('--config_file', required=False, default =None)
 @click.option('--parallel', required=False, is_flag=True)
-def ann(uniq_fa, outdir, database_use, annota_use,
+def ann(query_fa, uniq_gene_fa, outdir, database_use, annota_use,
             method,min_evalue,min_identity,format,max_target_seqs,
             block_size,config_file,parallel):
     
-    if uniq_fa is None:
+    if query_fa is None:
         predict_dir = get_target_dir(outdir, "predict")
-        uniqu_gene_fa = f"{predict_dir}/GeneSet_unique.fa"
+        uniq_fa_protein = f"{predict_dir}/GeneSet_unique_protein.fa"
+        uniq_gene_fa = f"{predict_dir}/GeneSet_unique.fa"
     else:
-        uniqu_gene_fa = uniq_fa
+        uniq_fa_protein = query_fa
+        uniq_gene_fa = uniq_gene_fa
     
     runner = GenomeAnnotation(
-            uniq_fa= uniqu_gene_fa,
+            uniq_fa_protein= uniq_fa_protein,
+            uniq_fa = uniq_gene_fa,
             outdir= outdir ,
             database_use=database_use,
             config_file = config_file,

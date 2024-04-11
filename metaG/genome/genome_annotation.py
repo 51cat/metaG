@@ -8,7 +8,8 @@ from metaG.tools.annotation import Annoater
 class GenomeAnnotation(MinAna):
     def __init__(
             self,
-            uniq_fa= None,
+            uniq_fa_protein= None,
+            uniq_fa  =None,
             outdir= None ,
             database_use=None, # name1:name2:name3...
             config_file = None,
@@ -22,6 +23,7 @@ class GenomeAnnotation(MinAna):
             parallel = True
             ) -> None:
         super().__init__(outdir=outdir, step_name="annotation")
+        self.uniq_fa_protein = uniq_fa_protein
         self.uniq_fa = uniq_fa
         self.outdir = outdir
         self.config_file = config_file
@@ -54,7 +56,8 @@ class GenomeAnnotation(MinAna):
     def make_annotation_tasks(self):
         for database_name in self.database_use:
                 runner = Annoater(
-                    query_fa=self.uniq_fa,
+                    query_fa=self.uniq_fa_protein,
+                    uniq_gene_fa=self.uniq_fa,
                     database_name=database_name,
                     method=self.method,
                     min_evalue=self.min_evalue,

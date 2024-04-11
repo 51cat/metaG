@@ -18,6 +18,7 @@ class GenomoPredict(MinAna):
             word_size = 9,
             identity_threshold = 0.95,
             shorter_coverage = 0.9,
+            table_code = 11,
             config_file = None,
             parallel = True
             ) -> None:
@@ -26,6 +27,7 @@ class GenomoPredict(MinAna):
         self.outdir = outdir
         self.config_file = config_file
         self.predict_use = predict_use
+        self.table_code = table_code
         self.parallel = parallel
 
         self.word_size = word_size
@@ -40,6 +42,7 @@ class GenomoPredict(MinAna):
 
         self.geneset_all = f"{self.parent_dir}/GeneSet_all.fa"
         self.geneset_unique = f"{self.parent_dir}/GeneSet_unique.fa"
+        self.geneset_unique_protein = f"{self.parent_dir}/GeneSet_unique_protein.fa"
 
         self.jsons = []
         self.gene_fas = []
@@ -84,7 +87,7 @@ class GenomoPredict(MinAna):
             self.predict_tasks_lst.append(runner)
 
             self.jsons.append(runner.predict_json)
-            self.gene_fas.append(runner.faa)
+            self.gene_fas.append(runner.ffn)
         
     def make_predict_stat(self):
         clean_contig_dict  = merge_json_files(self.jsons)
@@ -120,6 +123,13 @@ class GenomoPredict(MinAna):
         self.run_cmds([f"mv {os.path.abspath(file)} {self.parent_dir}"
                         for file in index_files])
 
+    def make_uniq_protein(self):
+        sp = SeqProcesser()
+        sp.set_in_fa(self.geneset_unique)
+        sp.set_out_fa(self.geneset_unique_protein)
+        sp.to_protein(table_code=self.table_code)
+        self.gene_fas.append(self.geneset_unique_protein)
+
     def start(self):
         self.make_predict_tasks()
         self.run_tasks(self.predict_tasks_lst, self.parallel)
@@ -127,6 +137,7 @@ class GenomoPredict(MinAna):
         self.make_remove_redu_task()
         self.run_tasks(self.remove_redu_tasks_lst, parallel=False)
         self.index_uniqu_gene()
+        self.make_uniq_protein()
         self.make_predict_stat()
         self.clean()
 

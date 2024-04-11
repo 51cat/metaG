@@ -14,6 +14,7 @@ DIAMOND_COLS = ["qseqid", "sseqid", "pident", "length", "mismatch",
 class Annoater(MinAna):
     def __init__(self, 
                  query_fa = None,
+                 uniq_gene_fa = None,
                  database_name = None,
                  method = "blastp",
                  min_evalue =0.00001,
@@ -25,6 +26,7 @@ class Annoater(MinAna):
                  config_file = None):
             super().__init__(outdir=outdir)
             self.query_fa = query_fa
+            self.uniq_gene_fa = uniq_gene_fa
             self.database_name = database_name
             self.method = method
             self.min_evalue = min_evalue
@@ -84,7 +86,7 @@ class Annoater(MinAna):
 
          sp = SeqProcesser()
          length_file = f"{self.outdir}/__len.tsv"
-         sp.set_in_fa(self.query_fa)
+         sp.set_in_fa(self.uniq_gene_fa)
          sp.getlen(length_file)
 
          length_df = pd.read_table(length_file)

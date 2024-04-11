@@ -5,7 +5,6 @@ import os
 import json
 from metaG.utils import get_target_dir
 from multiprocessing import Pool
-import multiprocessing
 from metaG import get_default_cpus
 
 def run_single_task(task):
@@ -72,7 +71,7 @@ class MinAna:
 
     def run_tasks(self, task_lst, parallel = False):
         if parallel:
-            each_ncpu = int(self.cpu/len(task_lst)) - 1
+            each_ncpu = int(self.cpu/len(task_lst)) + 5
             task_lst_new = []
             for t in task_lst:
                 t.set_cpu(each_ncpu)
