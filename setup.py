@@ -16,7 +16,8 @@ setup(
     python_requires=">=3",
     entry_points="""
         [console_scripts]
-        metaG=metaG.metaG_start:main
+        metaG_genome=metaG.genome:main
+        
         get_config=metaG.cmd.get_config:main
         metaG_run=metaG.cmd.metaG_run:main
     """

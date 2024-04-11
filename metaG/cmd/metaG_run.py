@@ -8,6 +8,7 @@ class METAG_STARTER:
     def __init__(self, 
                  rawdata_table, 
                  outdir,
+                 data_type,
                  host= None, 
                  fa = None, 
                  step = "all", 
@@ -16,6 +17,7 @@ class METAG_STARTER:
         self.rawdata_table = rawdata_table
         self.host = host
         self.fa = fa
+        self.data_type = data_type
         self.step = step
         self.outdir = outdir
         self.configfile = configfile
@@ -26,12 +28,20 @@ class METAG_STARTER:
 
         self._hostbase_path = f"{os.path.dirname(metaG.__file__)}/lib/host_database"
         self._supports = os.listdir(self._hostbase_path)
+    
+    def __check(self):
+        if self.data_type not in ["genome"]:
+            raise KeyError
 
-        self.__mk_dict = {
-            "pre_process": self.mk_pre_process,
-            "assembly": self.mk_assembly,
-            "predict_gene": self.mk_predict_gene,
-        }
+    def __init_cmd(self):
+        if self.data_type == "genome":
+            from metaG.genome import ARGS_DICT
+            self.args_dict = ARGS_DICT
+            self._cmd = "metaG_genome "
+
+    def write_cmd(self):
+        pass
+
     
     def __init_cmd(self):
         self._cmd = "metaG "
