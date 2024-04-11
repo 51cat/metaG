@@ -21,8 +21,9 @@ class Fastqc:
     def set_cpu(self, ncpu):
         self.cpu  = ncpu
 
+    @add_log
     def run(self):
         cmd = (
-            f"{FASTQC_PATH} -t {self.cpu} -o {self.out}  {self.r1} {self.r2}"
+            f"{FASTQC_PATH} -q -t {self.cpu} -o {self.out}  {self.r1} {self.r2}"
         )
         subprocess.check_call(cmd, shell=True)
