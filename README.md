@@ -16,10 +16,10 @@
    ```
 
 3. 运行安装脚本(根据网速快慢: 大多消耗时间在30-60 min)
-```
-conda activate my_cenv
-bash install.sh
-```
+   ```
+   conda activate my_cenv
+   bash install.sh
+   ```
 
 
 ## 数据库构建
@@ -52,6 +52,15 @@ m_download jp_rice
 
 ```shell
 mk_hostdb make --fa ./JP_rice_genomic.fna --prfx JP_rice 
+```
+4. 查看构建是否成功
+```shell
+mk_hostdb ls 
+# 输出
+#Database path: /home/issas/dev/metaG/metaG/lib/host_database/
+#Database name	size 
+#	JP_rice	0.97 G
+#Total: 0.97 G
 ```
 
 删除数据库：
@@ -90,6 +99,16 @@ m_download scys
 
 ```shell
 mk_anndb make --fa ./scys.fa --prfx SCYS 
+```
+
+4. 查看构建是否成功
+```shell
+mk_anndb ls 
+# 输出
+#Database path: /home/issas/dev/metaG/metaG/lib/database/DIAMOND/
+#Database name	size 
+#	Scyc	0.2 G
+#Total: 0.2 G
 ```
 
 删除数据库：
