@@ -15,12 +15,23 @@ def lib():
     softs_dir = f"{root_dir}/lib/softs/"
     if not os.path.exists:
         os.system(f"mkdir {lib_dir}")
-    cmd = f"bypy --config-dir {config_dir} syncdown / {lib_dir}"
-    cmd2 = f"chmod -R +x {softs_dir}"
-    subprocess.check_call(cmd, shell=True)
+    cmd1 = f"bypy --config-dir {config_dir} downdir /adapters {lib_dir}"
+    cmd2 = f"bypy --config-dir {config_dir} downdir /softs {lib_dir}"
+    cmd3 = f"chmod -R +x {softs_dir}"
+    subprocess.check_call(cmd1, shell=True)
     subprocess.check_call(cmd2, shell=True)
+    subprocess.check_call(cmd3, shell=True)
 
 @main.command()
-@click.option('--name', default = None)
-def fa(name):
-    pass
+def jp_rice():
+    root_dir = f"{os.path.dirname(metaG.__file__)}"
+    config_dir = f"{root_dir}/configs/.bypy"
+    cmd = f"bypy --config-dir {config_dir} downfile /genome/JP_rice_genomic.fna ./"
+    subprocess.check_call(cmd, shell=True)
+
+@main.command()
+def scyc():
+    root_dir = f"{os.path.dirname(metaG.__file__)}"
+    config_dir = f"{root_dir}/configs/.bypy"
+    cmd = f"bypy --config-dir {config_dir} downfile /genome/scyc.fa ./"
+    subprocess.check_call(cmd, shell=True)

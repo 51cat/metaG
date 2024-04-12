@@ -1,2 +1,3 @@
 trimmomatic
 pandas
+samtools

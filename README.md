@@ -12,22 +12,15 @@
 
    ```shell
    cd ./metaG
-   bash scripts/build.sh
+   conda create -n my_cenv python=3.10
    ```
 
-3. 下载软件所需数据库
+3. 运行安装脚本(根据网速快慢: 大多消耗时间在30-60 min)
+```
+conda activate my_cenv
+bash install.sh
+```
 
-   输入以下命令等待下载:
-   
-   ```shell
-   m_download lib
-   ```
-
-3. 测试
-
-   ```shell
-   genome_run --help 
-   ```
 
 ## 数据库构建
 
@@ -43,12 +36,22 @@ mk_hostdb ls
 
 **构建数据库**
 
+以Japanese rice为例
+
+1. 切换到其他的任意目录
+
+2. 下载Japanese rice基因组, 自动下载到当前目录, 文件名: `JP_rice_genomic.fna`
+```
+m_download jp_rice
+```
+3. 构建宿主数据库
+
 `--fa`: 宿主fasta文件路径
 
 `--prfx`: 构建的数据库名称
 
 ```shell
-mk_hostdb make --fa /path/to/human.fa --prfx human 
+mk_hostdb make --fa ./JP_rice_genomic.fna --prfx JP_rice 
 ```
 
 删除数据库：
@@ -56,7 +59,7 @@ mk_hostdb make --fa /path/to/human.fa --prfx human
 `--db_name`: 数据库名称，要与`mk_hostdb ls`相对应
 
 ```
-mk_hostdb clean --db_name human
+mk_hostdb clean --db_name JP_rice
 ```
 
 ### 基因注释数据库构建
@@ -71,20 +74,30 @@ mk_anndb ls
 
 **构建数据库**
 
-`--fa`:  fasta文件路径
+以硫循环基因为例
+
+1. 切换到其他的任意目录
+
+2. 下载硫循环基因数据库, 自动下载到当前目录, 文件名: `scys.fa`
+```shell
+m_download scys
+```
+3. 构建基因注释数据库
+
+`--fa`: 基因fasta文件路径
 
 `--prfx`: 构建的数据库名称
 
 ```shell
-mk_anndb make --fa /path/to/nr.fa --prfx nr 
+mk_anndb make --fa ./scys.fa --prfx SCYS 
 ```
 
 删除数据库：
 
-`--db_name`: 数据库名称，要与`mk_anndb ls`相对应
+`--db_name`: 数据库名称，要与`mk_hostdb ls`相对应
 
-```
-mk_anndb clean --db_name nr
+```shell
+mk_anndb clean --db_name SCYS
 ```
 
 ## 使用
