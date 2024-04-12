@@ -12,7 +12,8 @@ class GenomoCount(MinAna):
                  genome_fa,
                  ann_dir,
                  outdir,
-                 parallel = True) -> None:
+                 parallel = True,
+                 config_file = None) -> None:
         super().__init__(outdir,step_name="count")
         self.fq_json = fq_json
         self.genome_fa = genome_fa
@@ -46,12 +47,6 @@ class GenomoCount(MinAna):
             )
             self.sample_count_jsons.append(runner.raw_reads_json)
             self.map_tasks.append(runner)
-    
-    
-    def load_json(self, file):
-        with open(file) as fd:
-            return json.load(fd)
-
 
     def make_count_json(self):
         self.raw_count_dict = merge_json_files(self.sample_count_jsons)

@@ -49,7 +49,7 @@ class DIAMOND:
             f"--max-target-seqs {self.max_target_seqs} "
             f"--id {self.min_identity} "
             f"--block-size {self.block_size} "
-            f"--threads {self.cpu}"
+            f"--threads {self.cpu} "
         )
         if self.config_file  not in [ None, "None"]:
             advance_args = parse_config_file(self.config_file, "DIAMOND")

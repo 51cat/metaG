@@ -147,7 +147,8 @@ def ann(query_fa, uniq_gene_fa, outdir, database_use, annota_use,
 @click.option('--db_ann_dir', default=None, required=False)
 @click.option('--genome_fa', required=False, default =None)
 @click.option('--parallel', required=False, is_flag=True)
-def count(rawdata_table, outdir, db_ann_dir, genome_fa, parallel):
+@click.option('--config_file', required=False, default =None)
+def count(rawdata_table, outdir, db_ann_dir, genome_fa, parallel, config_file):
     if rawdata_table is None:
         prep_dir = get_target_dir(outdir, "prep")
         fq_json = f"{prep_dir}/clean_fastq.json"

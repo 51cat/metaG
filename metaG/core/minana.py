@@ -55,6 +55,10 @@ class MinAna:
         with open(out,"w") as fd:
             fd.write(json_str)
     
+    def load_json(self, file):
+        with open(file) as fd:
+            return json.load(fd)
+
     def clean(self):
         if len(self._rubbish) == 0:
             return
@@ -71,12 +75,12 @@ class MinAna:
 
     def run_tasks(self, task_lst, parallel = False):
         if parallel:
-            each_ncpu = int(self.cpu/len(task_lst)) + 5
+            each_ncpu = int(self.cpu/len(task_lst)) - 1
             task_lst_new = []
             for t in task_lst:
                 t.set_cpu(each_ncpu)
                 task_lst_new.append(t) 
-            with Pool(processes=len(task_lst)) as pool:
+            with Pool(processes=min(len(task_lst), 64)) as pool:
                 pool.map(run_single_task, task_lst_new)
             pool.close()
             pool.join()

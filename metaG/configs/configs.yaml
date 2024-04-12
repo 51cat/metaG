@@ -1,0 +1,29 @@
+Trimmomatic:
+  adapter_fa: './data/TruSeq3-PE.fa'
+  mismatch: 2
+  match_pct: 30
+  match_pct_force: 10 
+  slide_window: '4:15'
+  min_len: 75
+  plate: 'ILLUMINACLIP'
+
+MEGAHIT:
+  k-min: 21
+  k-max: 141
+  k-step: 10
+  k-list: "21,29,39,59,79,99,119,141"
+  set-list-by-min-max-step: false
+  min-count: 2
+
+PRODIGAL:
+  closed_ends: false
+  output_format: "gff"
+  code_table: 11
+  drop_sequence_with_N: false
+  bypass_Shine_Dalgarno_trainer: false
+  mode: meta
+  write_all_potential_genes: false
+  write_a_training_file: false
+
+DIAMOND:
+  tantan-minMaskProb: 0.9
