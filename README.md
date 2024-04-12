@@ -25,11 +25,59 @@
 
 ### 宿主数据库构建
 
+使用`mk_hostdb`操作宿主数据库：
 
+**查看数据库：**
+
+```shell
+mk_hostdb ls
+```
+
+**构建数据库**
+
+`--fa`: 宿主fasta文件路径
+
+`--prfx`: 构建的数据库名称
+
+```shell
+mk_hostdb make --fa /path/to/human.fa --prfx human 
+```
+
+删除数据库：
+
+`--db_name`: 数据库名称，要与`mk_hostdb ls`相对应
+
+```
+mk_hostdb clean --db_name human
+```
 
 ### 基因注释数据库构建
 
+使用`mk_anndb`操作注释数据库：
 
+**查看数据库：**
+
+```shell
+mk_anndb ls
+```
+
+**构建数据库**
+
+`--fa`:  fasta文件路径
+
+`--prfx`: 构建的数据库名称
+
+```shell
+mk_anndb make --fa /path/to/nr.fa --prfx nr 
+```
+
+删除数据库：
+
+`--db_name`: 数据库名称，要与`mk_anndb ls`相对应
+
+```
+mk_anndb clean --db_name nr
+```
 
 ## 使用
 
