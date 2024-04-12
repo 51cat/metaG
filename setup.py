@@ -20,6 +20,8 @@ setup(
 
         mk_anndb=metaG.cmd.mk_anndb:main
         mk_hostdb=metaG.cmd.mk_hostdb:main
+        download_lib=metaG.cmd.download_lib:main
+        
         get_config=metaG.cmd.get_config:main
         genome_run=metaG.cmd.genome_run:main
     """

@@ -15,6 +15,14 @@
    bash scripts/build.sh
    ```
 
+3. 下载软件所需数据库
+
+   输入以下命令等待即可(未实现):
+   
+   ```shell
+   download_lib
+   ```
+
 3. 测试
 
    ```shell

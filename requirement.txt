@@ -2,3 +2,4 @@ colorlog
 pysam
 multiqc
 click
+bypy

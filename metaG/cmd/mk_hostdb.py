@@ -7,6 +7,18 @@ from metaG.core.log import add_log
 DBDIR = f"{os.path.dirname(metaG.__file__)}/lib/host_database/"
 BWA_PATH = f"{os.path.dirname(metaG.__file__)}/lib/softs/bwa/bwa"
 
+def get_directory_size(directory):
+    total_size = 0
+    for dirpath, dirnames, filenames in os.walk(directory):
+        for filename in filenames:
+            filepath = os.path.join(dirpath, filename)
+            total_size += os.path.getsize(filepath)
+    return round(total_size / (1024 * 1024 * 1024), 2)
+
+@click.group()
+def main():
+    pass
+
 @click.group()
 def main():
     pass
@@ -14,9 +26,14 @@ def main():
 @main.command()
 def ls():
     print(f"Database path: {DBDIR}")
-    print(f"Database name: ")
+    print(f"Database name\tsize ")
+    total = 0
     for db_name in os.listdir(DBDIR):
-        print(f"\t{db_name}")
+        size = get_directory_size(f'{DBDIR}/{db_name}')
+        print(f"\t{db_name}\t{size} G")
+        total+=size
+    print(f"Total: {round(total,2)} G")
+    
 
 @main.command()
 @click.option('--fa', default = None)
