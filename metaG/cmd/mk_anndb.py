@@ -22,8 +22,16 @@ def main():
 def ls():
     print(f"Database path: {DBDIR}")
     print(f"Database name\tsize ")
+    if not os.path.exists(DBDIR):
+        print("Not Found database dir! plaease use mk_anndb make to create databse dir")
+        return
+    dirnames = os.listdir(DBDIR)
+    if len(dirnames) == 0:
+        print("Not Found database dir! plaease use mk_anndb make to create databse dir")
+        return
+    
     total = 0
-    for db_name in os.listdir(DBDIR):
+    for db_name in dirnames:
         size = get_directory_size(f'{DBDIR}/{db_name}')
         print(f"\t{db_name}\t{size} G")
         total+=size
