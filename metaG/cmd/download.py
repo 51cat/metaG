@@ -12,11 +12,12 @@ def lib():
     root_dir = f"{os.path.dirname(metaG.__file__)}"
     config_dir = f"{root_dir}/configs/.bypy"
     lib_dir = f"{root_dir}/lib/"
+    adapters_dir = f"{root_dir}/lib/adapter/"
     softs_dir = f"{root_dir}/lib/softs/"
     if not os.path.exists:
         os.system(f"mkdir {lib_dir}")
-    cmd1 = f"bypy --config-dir {config_dir} downdir /adapters {lib_dir}"
-    cmd2 = f"bypy --config-dir {config_dir} downdir /softs {lib_dir}"
+    cmd1 = f"bypy --config-dir {config_dir} downdir /adapters {adapters_dir}"
+    cmd2 = f"bypy --config-dir {config_dir} downdir /softs {softs_dir}"
     cmd3 = f"chmod -R +x {softs_dir}"
     subprocess.check_call(cmd1, shell=True)
     subprocess.check_call(cmd2, shell=True)
