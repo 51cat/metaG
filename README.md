@@ -87,9 +87,9 @@ mk_anndb ls
 
 1. 切换到其他的任意目录
 
-2. 下载硫循环基因数据库, 自动下载到当前目录, 文件名: `scys.fa`
+2. 下载硫循环基因数据库, 自动下载到当前目录, 文件名: `scyc.fa`
 ```shell
-m_download scys
+m_download scyc
 ```
 3. 构建基因注释数据库
 
@@ -98,7 +98,7 @@ m_download scys
 `--prfx`: 构建的数据库名称
 
 ```shell
-mk_anndb make --fa ./scys.fa --prfx SCYS 
+mk_anndb make --fa ./scyc.fa --prfx SCYC
 ```
 
 4. 查看构建是否成功
