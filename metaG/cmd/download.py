@@ -12,7 +12,7 @@ def lib():
     root_dir = f"{os.path.dirname(metaG.__file__)}"
     config_dir = f"{root_dir}/configs/.bypy"
     lib_dir = f"{root_dir}/lib/"
-    adapters_dir = f"{root_dir}/lib/adapter/"
+    adapters_dir = f"{root_dir}/lib/adapters/"
     softs_dir = f"{root_dir}/lib/softs/"
     if not os.path.exists:
         os.system(f"mkdir {lib_dir}")

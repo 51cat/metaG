@@ -41,8 +41,8 @@ mk_hostdb ls
 1. 切换到其他的任意目录
 
 2. 下载Japanese rice基因组, 自动下载到当前目录, 文件名: `JP_rice_genomic.fna`
-```
-m_download jp_rice
+```shell
+m_download jp-rice
 ```
 3. 构建宿主数据库
 
