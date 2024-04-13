@@ -37,7 +37,7 @@
 - ann
 - count
 
-通过`--steps`控制运行的步骤，例如运行质控和assembly步骤
+通过`--step`控制运行的步骤，例如运行质控和assembly步骤
 
 1. 新建分析目录
 
@@ -48,7 +48,7 @@
 2. 运行下面的命令
 
    ```
-   genome_run --rawdata_table /home/issas/dev/metaG/data/raw_file.list --host human --step pre_process,assembly --parallel
+   genome_run --rawdata_table /home/issas/dev/metaG/data/raw_file.list --host human --step pre_process --parallel
    ```
 
 3. 会自动生成相应的文件

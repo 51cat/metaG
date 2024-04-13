@@ -154,7 +154,7 @@ class GENOME_STARTER:
         steps_lst = steps.split(",")
         for step in steps_lst:
             self.__mk_dict[step]()
-        #self.add_configfile()
+        self.add_configfile()
     
     def write_cmd(self):
         cmd_str = "\n".join(self._cmd_lst)
@@ -167,7 +167,7 @@ def main():
     parser.add_argument('--rawdata_table', help='', required=True)
     parser.add_argument('--outdir', help='', default="./out/", required=False)
     parser.add_argument('--host', help='', required=False)
-    parser.add_argument('--steps', help='', required=False, default="all")
+    parser.add_argument('--step', help='', required=False, default="all")
     parser.add_argument('--host_genome', help='', required=False)
     parser.add_argument('--configfile', help='', default="./configs.yaml", required=False)
 
@@ -193,7 +193,7 @@ def main():
             outdir = args.outdir,
             host= args.host, 
             host_genome = args.host_genome, 
-            step = args.steps, 
+            step = args.step, 
             configfile = args.configfile,
             min_contig_len = args.min_contig_len,
             word_size = args.word_size,
@@ -212,10 +212,10 @@ def main():
 
     runner.mk_rundir()
 
-    if args.steps == "all":
+    if args.step == "all":
         runner.mk_all()
     else:
-        runner.mk_step(args.steps)
+        runner.mk_step(args.step)
     runner.write_cmd()
 
 if __name__ == '__main__':

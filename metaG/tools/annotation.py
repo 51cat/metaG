@@ -16,33 +16,22 @@ class Annoater(MinAna):
                  query_fa = None,
                  uniq_gene_fa = None,
                  database_name = None,
-                 method = "blastp",
-                 min_evalue =0.00001,
-                 min_identity = 80,
-                 format = 6,
-                 max_target_seqs = 10,
                  outdir = None,
-                 block_size = 8, 
-                 config_file = None):
-            super().__init__(outdir=outdir)
+                 config_file = None,
+                 **kwargs
+                 ):
+            super().__init__(outdir=outdir, **kwargs)
             self.query_fa = query_fa
             self.uniq_gene_fa = uniq_gene_fa
             self.database_name = database_name
-            self.method = method
-            self.min_evalue = min_evalue
-            self.max_target_seqs = max_target_seqs
-            self.format = format
-            self.min_identity = min_identity
-            self.block_size = block_size
             self.config_file = config_file
-
             self.filter_df = None
 
             self.annoate_use = "diamond"
-            
             self.annoate_soft = {
                  "diamond":self.annoate_diamond
             }
+
             self._anno_out_raw = f"{self.outdir}/annotation_raw.tsv"
             self._anno_out_filter = f"{self.outdir}/annotation_filter.tsv"
             self._gene_length_json = f"{self.outdir}/gene_length.json"
@@ -57,7 +46,7 @@ class Annoater(MinAna):
         runner = DIAMOND(
                  query_fa=self.query_fa,
                  database_name=self.database_name,
-                 method=self.method,
+                 diamond_method=self.diamond_method,
                  min_evalue=self.min_evalue,
                  min_identity=self.min_identity,
                  format=self.format,

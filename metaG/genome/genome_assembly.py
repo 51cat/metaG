@@ -1,8 +1,6 @@
 from metaG.core.minana import MinAna
 from metaG.tools.seqtools import SeqProcesser
-from metaG.utils import get_target_dir, merge_json_files
 import json
-
 from metaG.tools.assembly import Assemblyer
 
 class GenomeAssembly(MinAna):
@@ -47,7 +45,8 @@ class GenomeAssembly(MinAna):
                     r1=r1,
                     r2=r2, 
                     sample_name=sample_name,
-                    outdir=f"{self.assembly_dir}"
+                    outdir=self.assembly_dir,
+                    min_contig_len=self.min_contig_len
                 )
                 runner.set_assembly_use(self.assembly_use)
                 self.clean_contig_dict.update({sample_name:runner.clean_contig})

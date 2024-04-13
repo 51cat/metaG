@@ -1,46 +1,29 @@
 from metaG.core.minana import MinAna
-from metaG.tools.seqtools import SeqProcesser
-from metaG.utils import get_target_dir, merge_json_files
-import json
-
 from metaG.tools.annotation import Annoater
+from dataclasses import dataclass
 
+@dataclass
 class GenomeAnnotation(MinAna):
-    def __init__(
-            self,
-            uniq_fa_protein= None,
-            uniq_fa  =None,
-            outdir= None ,
-            database_use=None, # name1:name2:name3...
-            config_file = None,
-            annota_use = "diamond",
-            method = "blastp",
-            min_evalue =0.00001,
-            min_identity = 80,
-            format = 6,
-            max_target_seqs = 10,
-            block_size = 8,
-            parallel = True
-            ) -> None:
-        super().__init__(outdir=outdir, step_name="annotation")
-        self.uniq_fa_protein = uniq_fa_protein
-        self.uniq_fa = uniq_fa
-        self.outdir = outdir
-        self.config_file = config_file
-        self.database_use = database_use.split(":")
-        self.annota_use = annota_use
-        self.parallel =parallel
-        self.method = method
-        self.min_evalue = min_evalue
-        self.min_identity = min_identity
-        self.format = format
-        self.max_target_seqs = max_target_seqs
-        self.block_size = block_size
-
+    uniq_fa_protein: str = None,
+    uniq_fa: str   =None,
+    outdir: str = None ,
+    database_use: str =None, # name1:name2:name3...
+    config_file: str  = None,
+    annota_use: str  = "diamond",
+    method: str  = "blastp",
+    min_evalue: float =0.00001,
+    min_identity: int = 80,
+    format: int = 6,
+    max_target_seqs: int = 10,
+    block_size: int = 8,
+    parallel: bool = True
+    
+    def __post_init__(self):
+        super().__init__(outdir=self.outdir, step_name="annotation")
+        self.database_use = self.database_use.split(":")
         self._annota_dir = f"04.annotation/{self.annota_use}_out/"
         self.annota_dir = f"{self.outdir}/{self._annota_dir}/"
         self.make_step_outdir(self._annota_dir)
-
         self.prep_start()
 
         self.gene_length_dict = {}
@@ -59,7 +42,7 @@ class GenomeAnnotation(MinAna):
                     query_fa=self.uniq_fa_protein,
                     uniq_gene_fa=self.uniq_fa,
                     database_name=database_name,
-                    method=self.method,
+                    diamond_method=self.method,
                     min_evalue=self.min_evalue,
                     min_identity=self.min_identity,
                     format=self.format,

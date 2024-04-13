@@ -11,7 +11,7 @@ DATABASE_PATH = f"{os.path.dirname(metaG.__file__)}/lib/database/DIAMOND/"
 class DIAMOND:
     query_fa :str = None,
     database_name :str = None,
-    method :str = "blastp",
+    diamond_method :str = "blastp",
     min_evalue :float = 0.00001,
     min_identity :int = 80,
     format :int = 6,
@@ -26,7 +26,7 @@ class DIAMOND:
     def run(self):
         cmd = (
             f"{DIAMOND_PATH} "
-            f"{self.method} "
+            f"{self.diamond_method} "
             f"--query {self.query_fa} "
             f"--db {DATABASE_PATH}/{self.database_name}/{self.database_name} "
             f"--out {self.out} "
