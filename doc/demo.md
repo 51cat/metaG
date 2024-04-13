@@ -24,7 +24,7 @@ ls -l
 4. 输入分析命令自动生成分析脚本
 
 ```shell
-genome_run --rawdata_table ./rawdata_table.tsv --host rice --parallel
+genome_run --rawdata_table ./rawdata_table.tsv --host JP_rice --parallel
 ```
 
 5. 会自动在当前的目录下生成下面的文件
