@@ -29,15 +29,15 @@ genome_run --rawdata_table ./rawdata_table.tsv --host rice --parallel
 
 5. 会自动在当前的目录下生成下面的文件
 
-   ```shell
-   configs.yaml           # 配置文件
-   data/			      # 运行所需数据的存放目录
-   out/                   # 分析结果存放目录
-   run_metaG_genome.sh    # 分析脚本
-   ```
+```shell
+configs.yaml           # 配置文件
+data/			      # 运行所需数据的存放目录
+out/                   # 分析结果存放目录
+run_metaG_genome.sh    # 分析脚本
+```
 
 4. 运行分析脚本
 
-   ```shell
-   bash run_metaG_genome.sh 
-   ```
+```shell
+bash run_metaG_genome.sh 
+```
