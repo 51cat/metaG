@@ -26,12 +26,12 @@
 
 ### 宿主数据库构建
 
-使用`mk_hostdb`操作宿主数据库：
+使用`hostdb_tk`操作宿主数据库：
 
 **查看数据库：**
 
 ```shell
-mk_hostdb ls
+hostdb_tk ls
 ```
 
 **构建数据库**
@@ -51,11 +51,11 @@ m_download jp-rice
 `--prfx`: 构建的数据库名称
 
 ```shell
-mk_hostdb make --fa ./JP_rice_genomic.fna --prfx JP_rice 
+hostdb_tk make --fa ./JP_rice_genomic.fna --prfx JP_rice 
 ```
 4. 查看构建是否成功
 ```shell
-mk_hostdb ls 
+hostdb_tk ls 
 # 输出
 #Database path: /home/issas/dev/metaG/metaG/lib/host_database/
 #Database name	size 
@@ -68,17 +68,17 @@ mk_hostdb ls
 `--db_name`: 数据库名称，要与`mk_hostdb ls`相对应
 
 ```
-mk_hostdb clean --db_name JP_rice
+hostdb_tk clean --db_name JP_rice
 ```
 
 ### 基因注释数据库构建
 
-使用`mk_anndb`操作注释数据库：
+使用`anndb_tk`操作注释数据库：
 
 **查看数据库：**
 
 ```shell
-mk_anndb ls
+anndb_tk ls
 ```
 
 **构建数据库**
@@ -98,12 +98,12 @@ m_download scyc
 `--prfx`: 构建的数据库名称
 
 ```shell
-mk_anndb make --fa ./scyc.fa --prfx SCYC
+anndb_tk make --fa ./scyc.fa --prfx SCYC
 ```
 
 4. 查看构建是否成功
 ```shell
-mk_anndb ls 
+anndb_tk ls 
 # 输出
 #Database path: /home/issas/dev/metaG/metaG/lib/database/DIAMOND/
 #Database name	size 
@@ -116,9 +116,9 @@ mk_anndb ls
 `--db_name`: 数据库名称，要与`mk_hostdb ls`相对应
 
 ```shell
-mk_anndb clean --db_name SCYS
+anndb_tk clean --db_name SCYS
 ```
 
 ## 使用
-
+- [测试数据分析](./doc/demo.md)
 - [宏基因组数据](./doc/genome.md)

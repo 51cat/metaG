@@ -34,6 +34,7 @@ class RedundancyRemover(MinAna):
             out_fa=self.output_fa,
             word_size=self.word_szie,
             shorter_coverage=self.shorter_coverage,
+            identity_threshold = self.identity_threshold,
             config_file=self.config_file,
             cpu = self.cpu,
             memeory=self.memory

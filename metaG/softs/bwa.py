@@ -3,29 +3,21 @@ from metaG.core.log import add_log
 import os
 import glob
 import metaG
-
+from dataclasses import dataclass
 BWA_PATH = f"{os.path.dirname(metaG.__file__)}/lib/softs/bwa/bwa"
 
+@dataclass
 class BWA:
-    def __init__(self,
-                 host = None, 
-                 fa = None, 
-                 genome_dir = None,
-                 mode = None, 
-                 r1 = None, 
-                 r2 = None,
-                 cpu = None,
-                 memory = None
-                 ) -> None:
-        
-        self.host = host
-        self.fa = fa
-        self.genome_dir = genome_dir
-        self.r1 = r1
-        self.r2 = r2
-        self.mode = mode
-        self.cpu = cpu
-        self.memory = memory
+    host: str = None
+    fa: str = None
+    genome_dir: str = None
+    mode: str = None
+    r1: str = None
+    r2: str = None
+    cpu: int = None
+    memory: int = None
+
+    def __post_init__(self):
         self.mem_out_bam = None
 
     def set_mem_out_bam(self, mem_out_bam):
@@ -39,6 +31,7 @@ class BWA:
         subprocess.check_call(cmd1, shell=True)
         subprocess.check_call(cmd2, shell=True)
 
+    @add_log
     def mem(self):
         
         try:

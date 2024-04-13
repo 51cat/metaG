@@ -1,31 +1,22 @@
-import argparse
 import subprocess
 import os
 import metaG
 from metaG.utils import parse_config_file
+from dataclasses import dataclass
 
 PRODIGAL_PATH = f"{os.path.dirname(metaG.__file__)}/lib/softs/prodigal/prodigal"
 ARGS_JSON = f"{os.path.dirname(metaG.__file__)}/lib/softs/prodigal/args.json"
 
+@dataclass
 class PRODIGAL:
-    def __init__(self,
-                 contig_file,
-                 faa_out,
-                 ffn_out,
-                 out,
-                 config_file = None,
-                 cpu = None,
-                 memory = None
-                 ) -> None:
-        
-        self.contig_file = contig_file
-        self.faa_out = faa_out
-        self.ffn_out = ffn_out
-        self.out = out
-        self.config_file = config_file
-        self.cpu = cpu
-        self.memory = memory
-    
+    contig_file :str = None,
+    faa_out :str = None,
+    ffn_out :str = None,
+    out :str = None,
+    config_file :str = None,
+    cpu : int =  None,
+    memory : int = None
+
     def run(self):
         cmd = (
             f"{PRODIGAL_PATH} -i {self.contig_file} -p meta -q -a {self.faa_out} -d {self.ffn_out} -o {self.out} "

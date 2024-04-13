@@ -2,28 +2,19 @@ import subprocess
 import os
 import metaG
 from metaG.utils import parse_config_file
-
+from dataclasses import dataclass
 MEGAHIT_PATH = f"{os.path.dirname(metaG.__file__)}/lib/softs/MEGAHIT/bin/megahit"
 
+@dataclass
 class MEGAHIT:
-    def __init__(self,
-                 r1 = None,
-                 r2 = None,
-                 out = None,
-                 config_file = None,
-                 min_contig_len = 500,
-                 cpu = None,
-                 memory = None
-                 ) -> None:
-        
-        self.r1 = r1
-        self.r2 = r2
-        self.out = out
-        self.min_contig_len = min_contig_len
-        self.config_file = config_file
-        self.cpu = cpu
-        self.memory = memory
-    
+    r1 :str= None,
+    r2 :str= None,
+    out :str= None,
+    config_file :str= None,
+    min_contig_len :int = 500,
+    cpu :int = None,
+    memory :int = None
+
     def run(self):
         cmd = (
             f"{MEGAHIT_PATH} "

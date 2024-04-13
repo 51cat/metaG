@@ -1,11 +1,11 @@
 import subprocess
-from metaG.core.log import add_log
 import os
 import metaG
 import json
 from metaG.utils import parse_config_file
 from collections import defaultdict
 from functools import partial
+from dataclasses import dataclass
 
 ADAPTER = f"ILLUMINACLIP:{os.path.dirname(metaG.__file__)}/lib/adapters/TruSeq3-PE.fa:2:30:10 SLIDINGWINDOW:4:15 MINLEN:75"
 
@@ -19,30 +19,20 @@ def mk_trim_rules(
         plate = 'ILLUMINACLIP'):
     return f"{plate}:{adapter_fa}:{mismatch}:{match_pct}:{match_pct_force} SLIDINGWINDOW:{slide_window} MINLEN:{min_len}"
     
-
+@dataclass
 class Trimmomatic:
-    def __init__(self,
-                 r1 = None, 
-                 r2 = None,
-                 sample_name = None,
-                 out = None,
-                 phred = "phred33",
-                 config_file = None,
-                 cpu = None,
-                 memory = None
-                 ) -> None:
+    r1 :str= None, 
+    r2 :str= None,
+    sample_name :str= None,
+    out :str= None,
+    phred :str= "phred33",
+    config_file :str= None,
+    cpu :int = None,
+    memory :int = None
         
-        self.r1 = r1
-        self.r2 = r2
-        self.sample_name = sample_name
-        self.out = out
-        self.cpu = cpu
-        self.memory = memory
-        self.phred = phred
-        self._adapter = ADAPTER
-        self.config_file = config_file
+    def __post_init__(self):
         self._reads_dict = defaultdict(partial(defaultdict, str))
-    
+        self._adapter = ADAPTER
 
     def mk_outdir(self):
 

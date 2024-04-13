@@ -83,7 +83,7 @@ def predict(rawdata_table, outdir, predict_use, word_size,
         loadder = DataLoader(rawdata_table, outdir,mode=2)
         loadder.run()
         clean_contig_json = loadder.rawdata_json   
-    
+        
     runner = GenomoPredict(
        contig_json=clean_contig_json,
         predict_use = predict_use,

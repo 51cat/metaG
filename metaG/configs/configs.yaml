@@ -25,5 +25,8 @@ PRODIGAL:
   write_all_potential_genes: false
   write_a_training_file: false
 
+CD_HIT:
+  band_width: 20
+
 DIAMOND:
   tantan-minMaskProb: 0.9
