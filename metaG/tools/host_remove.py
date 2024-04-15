@@ -57,14 +57,11 @@ class HostRemover(MinAna):
 
     @add_log
     def extract_reads_from_bam(self):
-        nprocess = 0
         self.count_dict = {
              "drop_nreads":0,
              "target_nreads":0,
              "sample_name": self.sample_name
         }
-
-
 
         self._reads_dict[self.sample_name]["R1"] = os.path.abspath(f"{self.out_r1}")
         self._reads_dict[self.sample_name]["R2"] = os.path.abspath(f"{self.out_r2}")
@@ -73,22 +70,43 @@ class HostRemover(MinAna):
         r2_writer = open(self.out_r2, "w")
 
         bam = pysam.AlignmentFile(self.out_bam)
+        r1_reads = []
+        r2_reads = []
         for r in bam:
-            nprocess += 1
-            if nprocess % 5000000 == 0:
-                self.extract_reads_from_bam.logger.info(f"Process reads: {nprocess}")
             f1 = r.reference_name is None
             f2 = r.is_paired
+            
             if f1 & f2:
                 self.count_dict["target_nreads"] += 1
-                
                 if r.is_read1:
-                     r1_writer.write(f'@{r.qname}\n{r.seq}\n+\n{r.qual}\n')
-                
+                     r1_reads.append(f'@{r.qname}\n{r.seq}\n+\n{r.qual}\n')
                 if r.is_read2:
-                     r2_writer.write(f'@{r.qname}\n{r.seq}\n+\n{r.qual}\n')
+                     r2_reads.append(f'@{r.qname}\n{r.seq}\n+\n{r.qual}\n')
             else:
                  self.count_dict["drop_nreads"] += 1
+            
+            if len(r1_reads) == 8000000:
+                r1_str = "\n".join(r1_reads) 
+                r1_writer.write(f"{r1_str}\n")
+                self.extract_reads_from_bam.logger.info(f"Process reads R1: '{len(r1_reads)}")
+                r1_reads = []
+                
+            if len(r2_reads) == 8000000:
+                r2_str = "\n".join(r2_reads) 
+                r2_writer.write(f"{r2_str}\n")
+                self.extract_reads_from_bam.logger.info(f"Process reads R2: '{len(r2_reads)}")
+                r2_reads = []
+        
+        if len(r1_reads)  != 0:
+            r1_str = "\n".join(r1_reads)
+            r1_writer.write(f"{r1_str}\n")
+            self.extract_reads_from_bam.logger.info(f"Process reads R1: '{len(r1_reads)}")
+        
+        if len(r2_reads) != 0:
+            r2_str = "\n".join(r2_reads) 
+            r2_writer.write(f"{r2_str}\n")
+            self.extract_reads_from_bam.logger.info(f"Process reads R2: '{len(r2_reads)}")
+
         r1_writer.close()
         r2_writer.close()
     

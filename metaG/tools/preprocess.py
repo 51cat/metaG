@@ -12,7 +12,7 @@ from metaG.tools.qc import QCer
 from metaG.tools.host_remove import HostRemover
 from metaG.softs.fastqc import Fastqc
 
-AVA_PCT = 0.9
+AVA_PCT = 0.8
 BWA_TOTAL_AVA = psutil.virtual_memory().available*AVA_PCT
 BWA_RAM = 34359738368/2
 
@@ -142,13 +142,15 @@ class DataPreProcessor(MinAna):
         with open(self.clean_fq_json) as fd:
             clean_fq_dict = json.load(fd)
         reads_lst = []
+        
         for sample_name in clean_fq_dict.keys():
             reads_lst.append(clean_fq_dict[sample_name]["R1"])
             reads_lst.append(clean_fq_dict[sample_name]["R2"])
-            runner = Fastqc(
-                reads_list=reads_lst,
-                out=self.fastqc_dir)
-            runner.run()
+        
+        runner = Fastqc(
+            reads_list=reads_lst,
+            out=self.fastqc_dir)
+        runner.run()
 
     def start(self):
         self.load_rawdata()

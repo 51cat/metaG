@@ -17,6 +17,7 @@ class Fastqc:
 
     @add_log
     def run(self):
+        self.run.logger.info(f"threads: {self.threads}")
         cmd = (
             f"{FASTQC_PATH} -q -t {self.threads} -o {self.out}  {self.reads_input}"
         )
