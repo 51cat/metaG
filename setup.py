@@ -16,8 +16,8 @@ setup(
         [console_scripts]
         metaG_genome=metaG.genome.start:main
 
-        anndb_tk=metaG.cmd.mk_anndb:main
-        hostdb_tk=metaG.cmd.mk_hostdb:main
+        anndb=metaG.cmd.mk_anndb:main
+        hostdb=metaG.cmd.mk_hostdb:main
         m_download=metaG.cmd.download:main
         
         get_config=metaG.cmd.get_config:main
