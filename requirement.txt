@@ -3,3 +3,4 @@ pysam
 multiqc
 click
 bypy
+psutil
