@@ -73,14 +73,19 @@ class MinAna:
         pool.close()
         pool.join()
 
-    def run_tasks(self, task_lst, parallel = False):
+    def run_tasks(self, task_lst, parallel = False, n = 0):
         if parallel:
-            each_ncpu = int(self.cpu/len(task_lst)) - 1
+            if n == 0:
+                each_ncpu = int(self.cpu/len(task_lst)) + 5
+                n_task = min(len(task_lst), 64)
+            else:
+                each_ncpu = int(self.cpu/n) + 5
+                n_task = n
             task_lst_new = []
             for t in task_lst:
                 t.set_cpu(each_ncpu)
                 task_lst_new.append(t) 
-            with Pool(processes=min(len(task_lst), 64)) as pool:
+            with Pool(processes=n_task) as pool:
                 pool.map(run_single_task, task_lst_new)
             pool.close()
             pool.join()

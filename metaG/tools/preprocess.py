@@ -1,6 +1,7 @@
 import json
 import glob
 import pandas as pd
+import psutil
 from metaG.utils import merge_json_files, merge_fastqc_res
 
 from metaG.tools.seqtools import SeqProcesser
@@ -10,6 +11,10 @@ from metaG.tools.index_host import IndexHost
 from metaG.tools.qc import QCer
 from metaG.tools.host_remove import HostRemover
 from metaG.softs.fastqc import Fastqc
+
+AVA_PCT = 0.9
+BWA_TOTAL_AVA = psutil.virtual_memory().available*AVA_PCT
+BWA_RAM = 34359738368/2
 
 class DataPreProcessor(MinAna):
     def __init__(self, 
@@ -133,16 +138,17 @@ class DataPreProcessor(MinAna):
         )
         merge_count_res.to_csv(self.host_count_file, sep = "\t", index=None)  
 
-    def make_generate_qc_report_tasks(self):
+    def generate_qc_report(self):
         with open(self.clean_fq_json) as fd:
             clean_fq_dict = json.load(fd)
-        print(clean_fq_dict)
+        reads_lst = []
         for sample_name in clean_fq_dict.keys():
+            reads_lst.append(clean_fq_dict[sample_name]["R1"])
+            reads_lst.append(clean_fq_dict[sample_name]["R2"])
             runner = Fastqc(
-                r1 = clean_fq_dict[sample_name]["R1"],
-                r2 = clean_fq_dict[sample_name]["R2"],
+                reads_list=reads_lst,
                 out=self.fastqc_dir)
-            self.generate_qc_report_task_lst.append(runner)
+            runner.run()
 
     def start(self):
         self.load_rawdata()
@@ -150,10 +156,9 @@ class DataPreProcessor(MinAna):
         self.make_qc_tasks()
         self.run_tasks(self.qc_tasks, self.parallel)
         self.make_host_remove_tasks()
-        self.run_tasks(self.host_remove_tasks, self.parallel)
+        self.run_tasks(self.host_remove_tasks, self.parallel, n = max(int(BWA_TOTAL_AVA/BWA_RAM), 1))
         self.make_preprocess_stat()
-        self.make_generate_qc_report_tasks()
-        self.run_tasks(self.generate_qc_report_task_lst, self.parallel)
+        self.generate_qc_report()
         # merge
         merge_fastqc_res(self.fastqc_dir, self.parent_dir)
 

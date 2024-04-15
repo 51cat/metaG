@@ -8,17 +8,16 @@ FASTQC_PATH = f"{os.path.dirname(metaG.__file__)}/lib/softs/FastQC/fastqc"
 
 @dataclass
 class Fastqc:
-    r1 :str = None
-    r2 :str = None
+    reads_list :list = None
     out: str = None
-    cpu: int = metaG.get_default_cpus()
-        
-    def set_cpu(self, ncpu):
-        self.cpu  = ncpu
+
+    def __post_init__(self):
+        self.reads_input = " ".join(self.reads_list)
+        self.threads = min(metaG.get_default_cpus(),len(self.reads_list))
 
     @add_log
     def run(self):
         cmd = (
-            f"{FASTQC_PATH} -q -t {self.cpu} -o {self.out}  {self.r1} {self.r2}"
+            f"{FASTQC_PATH} -q -t {self.threads} -o {self.out}  {self.reads_input}"
         )
         subprocess.check_call(cmd, shell=True)
