@@ -1,7 +1,12 @@
 from metaG.core.minana import MinAna
 from metaG.tools.seqtools import SeqProcesser
 import json
+import psutil
 from metaG.tools.assembly import Assemblyer
+
+AVA_PCT = 0.95
+MEGHIT_TOTAL_AVA = psutil.virtual_memory().available*AVA_PCT
+MEGHIT_RAM = 12884901888
 
 class GenomeAssembly(MinAna):
     def __init__(
@@ -59,7 +64,7 @@ class GenomeAssembly(MinAna):
 
     def start(self):
         self.make_assembly_tasks()
-        self.run_tasks(self.assembly_tasks_lst, self.parallel)
+        self.run_tasks(self.assembly_tasks_lst, self.parallel, n = max(int(MEGHIT_TOTAL_AVA/MEGHIT_RAM), 1))
         self.make_assembly_stat()
 
 def main():

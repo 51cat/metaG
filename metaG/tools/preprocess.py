@@ -9,10 +9,10 @@ from metaG.core.minana import MinAna
 from metaG.core.dataload import DataLoader
 from metaG.tools.index_host import IndexHost
 from metaG.tools.qc import QCer
-from metaG.tools.host_remove import HostRemover
+from metaG.tools.host_remove import HostRemover, multi_extract
 from metaG.softs.fastqc import Fastqc
 
-AVA_PCT = 0.8
+AVA_PCT = 0.95
 BWA_TOTAL_AVA = psutil.virtual_memory().available*AVA_PCT
 BWA_RAM = 34359738368/2
 
@@ -67,6 +67,7 @@ class DataPreProcessor(MinAna):
         self.qc_tasks = []
         self.host_remove_tasks = []
         self.generate_qc_report_task_lst = []
+        self.extract_bam_records = []
 
     def load_rawdata(self):
         runner = DataLoader(
@@ -107,8 +108,10 @@ class DataPreProcessor(MinAna):
             glob.glob(f"{self.qc_outdir}/*_trimmomatic_stat.json")
         )
         for sample_name in paired_reads_all.keys():
-            r1 = self.rawdata_json[sample_name]["R1"]
-            r2 = self.rawdata_json[sample_name]["R2"]
+            r1 = paired_reads_all[sample_name]["R1"]
+            r2 = paired_reads_all[sample_name]["R2"]
+            print(r1)
+            print(r2)
             runner = HostRemover(
                 r1 = r1,
                 r2 = r2,
@@ -119,6 +122,10 @@ class DataPreProcessor(MinAna):
             )
             runner.set_host_remove_use(self.host_remove_use)
             self.host_remove_tasks.append(runner)
+
+            self.extract_bam_records.append(
+                (sample_name, runner.out_bam, runner.out_r1, runner.out_r2, runner.host_count_file)
+            )
     
     def make_preprocess_stat(self):
         merge_host_remove_dict = merge_json_files(
@@ -159,6 +166,7 @@ class DataPreProcessor(MinAna):
         self.run_tasks(self.qc_tasks, self.parallel)
         self.make_host_remove_tasks()
         self.run_tasks(self.host_remove_tasks, self.parallel, n = max(int(BWA_TOTAL_AVA/BWA_RAM), 1))
+        multi_extract(self.extract_bam_records)
         self.make_preprocess_stat()
         self.generate_qc_report()
         # merge

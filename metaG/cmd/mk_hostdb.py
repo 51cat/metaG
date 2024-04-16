@@ -61,7 +61,7 @@ def make(fa, prfx):
     
     new_host_path = f"{DBDIR}/{prfx}/"
     subprocess.check_call(f"mkdir -p {new_host_path}", shell=True)
-    index_files = glob.glob(f"{prfx}*[fa,amd,ann,bwt,pac,sa]")
+    index_files = glob.glob(f"{prfx}*[fa,amd,ann,bwt,pac,sa]*")
     
     mv_to_database_cmds = [f"mv {os.path.abspath(file)} {new_host_path}"
                 for file in index_files]
