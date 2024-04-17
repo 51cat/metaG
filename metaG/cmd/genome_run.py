@@ -39,11 +39,22 @@ class GENOME_STARTER:
         
         self.default_args_dict =ARGS_DICT
         self.steps_dict = STEPS
+        self.__check()
     
-    def __init_cmd(self):
+    @add_log
+    def __check(self):
+        if self.step in ["all", "pre_process", "pre-process"]:
+            if (self.host not in self._supports) and (self.host_genome in ["None", None]):
+                self.__check.logger.error(f"Could not find {self.host} in {self._supports} Please use `hostdb make ` to create index of {self.host}! or " 
+                                        f"use --host_genome to provide host genome sequence")
+                exit(-1)
         
-        self._cmd = "metaG_genome "
+        if os.path.exists(self.outdir):
+            self.__check.logger.error(f"{self.outdir} exists, Please use a NEW outdir!")
+            exit(-1)
 
+    def __init_cmd(self):
+        self._cmd = "metaG_genome "
 
     def __mk_subcmd(self, subcmd):
         return f"{self._cmd}{subcmd}"
@@ -133,7 +144,7 @@ class GENOME_STARTER:
 
     def mk_rundir(self):
         os.system(f"mkdir {self.outdir}")
-        os.system(f"mkdir data")
+        os.system(f"mkdir -p data")
         os.system("get_config")
         adapters_path = f"{os.path.dirname(metaG.__file__)}/lib/adapters/*"
         os.system(f"cp -a {adapters_path} ./data/")
@@ -158,7 +169,7 @@ class GENOME_STARTER:
     
     def write_cmd(self):
         cmd_str = "\n".join(self._cmd_lst)
-        with open("./run_metaG_genome.sh", "w") as fd:
+        with open(f"./run_metaG_genome_{self.step}.sh", "w") as fd:
             fd.write(cmd_str)
 
 def main():
