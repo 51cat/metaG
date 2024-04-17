@@ -110,8 +110,6 @@ class DataPreProcessor(MinAna):
         for sample_name in paired_reads_all.keys():
             r1 = paired_reads_all[sample_name]["R1"]
             r2 = paired_reads_all[sample_name]["R2"]
-            print(r1)
-            print(r2)
             runner = HostRemover(
                 r1 = r1,
                 r2 = r2,

@@ -140,15 +140,3 @@ class GenomoPredict(MinAna):
         self.make_uniq_protein()
         self.make_predict_stat()
         self.clean()
-
-
-
-def main():
-    r = GenomoPredict(
-        contig_json="/home/issas/dev/meta_genome/test/test_final/out/02.assembly/clean_contig.json",
-        outdir = "./test/"
-    )
-    r.start()
-
-if __name__ == '__main__':
-    main()

@@ -45,9 +45,11 @@ def make(fa, prfx):
     os.system(f"mkdir -p {DBDIR}/{prfx}")
     cmd = f"{DIAMOND_PATH} makedb --in {fa} -d {DBDIR}/{prfx}/{prfx}"
     subprocess.check_call(cmd, shell=True)
+    print(f"Finish!")
 
 @main.command()
 @click.option('--db_name', default = None)
 def clean(db_name):
     cmd = f"rm -rf {DBDIR}/{db_name}"
     subprocess.check_call(cmd, shell=True)
+    print(f"Finish!")

@@ -85,15 +85,3 @@ class GenomoCount(MinAna):
         self.run_tasks(self.map_tasks, self.parallel)
         self.make_count_json()
         self.make_final_count()
-
-def main():
-    runner = GenomoCount(
-        fq_json="/home/issas/dev/meta_genome/test/test_final/out/01.prep/clean_data.json",
-        genome_fa="/home/issas/dev/metaG/test/test_final/out/03.predict/GeneSet_unique.fa",
-        outdir="./test/",
-        ann_dir = "/home/issas/dev/metaG/test/test_final/out/04.annotation/"
-    )
-    runner.start()
-
-if __name__ == '__main__':
-    main()

@@ -75,3 +75,4 @@ def make(fa, prfx):
 def clean(db_name):
     cmd = f"rm -rf {DBDIR}/{db_name}"
     subprocess.check_call(cmd, shell=True)
+    print(f"Finish!")

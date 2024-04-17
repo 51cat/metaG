@@ -54,7 +54,7 @@ class GeneTransfer:
             total = sum(counts)
             
             fpkms = map(
-                lambda x, y: (x*10e6)/(self.length_dict[y]*total), counts, genes
+                lambda x, y: np.log2((x*10e6)/(self.length_dict[y]*total) + 1), counts, genes
             )
             
             for gene, fpkm in zip(genes, fpkms):
@@ -67,7 +67,7 @@ class GeneTransfer:
             genes = list(self.count_dict[sample_name].keys())
             
             tpms = map(
-                lambda x, y: (x*10e6)/(self.length_dict[y]*(np.sum(x/self.length_dict[y]))), counts, genes
+                lambda x, y: np.log2((x*10e6)/(self.length_dict[y]*(np.sum(x/self.length_dict[y])))+1), counts, genes
             )
             for gene, tpm in zip(genes, tpms):
                 self.tpm_dict[sample_name].update({gene:tpm})
@@ -79,7 +79,7 @@ class GeneTransfer:
             genes = list(self.count_dict[sample_name].keys())
             total = sum(counts)
             cpms = map(
-                lambda x: 10e6 * x/total, counts
+                lambda x: np.log2((10e6 * x/total) + 1), counts
                 )
             
             for gene, cpm in zip(genes, cpms):

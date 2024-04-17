@@ -66,14 +66,3 @@ class GenomeAssembly(MinAna):
         self.make_assembly_tasks()
         self.run_tasks(self.assembly_tasks_lst, self.parallel, n = max(int(MEGHIT_TOTAL_AVA/MEGHIT_RAM), 1))
         self.make_assembly_stat()
-
-def main():
-    runner = GenomeAssembly(
-        "/home/issas/dev/meta_genome/test/test_final/out/01.prep/clean_data.json",
-        outdir="./test/"
-    )
-    runner.start()
-
-if __name__ == '__main__':
-    main()
-

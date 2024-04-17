@@ -69,15 +69,3 @@ class GenomeAnnotation(MinAna):
         self.make_annotation_tasks()
         self.run_tasks(self.annotation_tasks_lst, self.parallel)
         self.make_annota_stat()
-
-def main():
-    runner = GenomeAnnotation(
-        uniq_fa="/home/issas/dev/metaG/test/test_final/out/03.predict/GeneSet_unique.fa",
-        outdir="./test/",
-        database_use = "Ncyc:Pcyc:Scyc"
-    )
-    runner.start()
-
-if __name__ == '__main__':
-    main()
-

@@ -97,29 +97,29 @@ s_3  /path/to/sub3_R1.fastq.gz  /path/to//sub3_R2.fastq.gz
 
 - 数据质控相关参数
 
-​	`--host_genome`: 宿主基因组序列路径 , 如果自己提供宿主则需要此参数传递基因组路径
+​`--host_genome`: 宿主基因组序列路径 , 如果自己提供宿主则需要此参数传递基因组路径
 
 - assembly相关参数
 
-​	`--min_contig_len`: contig的最小长度，默认: `500`
+​`--min_contig_len`: contig的最小长度，默认: `500`
 
 - predict相关参数
 
-​	`--word_size`: 两两序列进行序列比对时选择的 word size, 默认：`9`
+​`--word_size`: 两两序列进行序列比对时选择的 word size, 默认：`9`
 
-​	`--identity_threshold`: 聚类相似度阈值，默认：`0.95`
+​`--identity_threshold`: 聚类相似度阈值，默认：`0.95`
 
-​	`--shorter_coverage`: 短序列覆盖度阈值，默认：`0.9`
+​`--shorter_coverage`: 短序列覆盖度阈值，默认：`0.9`
 
-​	`--translate_table`: 核酸序列转换为蛋白序列使用的转换表编号，默认`11`
+​`--translate_table`: 核酸序列转换为蛋白序列使用的转换表编号，默认`11`
 
 - 注释相关参数
 
-  `--database_use`: 注释使用的数据库名称，多个数据库使用冒号分隔，默认使用所有自带的数据库进行注释
+`--database_use`: 注释使用的数据库名称，多个数据库使用冒号分隔，默认使用所有自带的数据库进行注释
 
-  `--min_evalue`: e-value阈值，默认`0.00001`
+`--min_evalue`: e-value阈值，默认`0.00001`
 
-  `--min_identity`: identity阈值，默认`80`
+`--min_identity`: identity阈值，默认`80`
 
-  `--max_target_seqs`: 每条基因最大的预测结果数，默认`10`
+`--max_target_seqs`: 每条基因最大的预测结果数，默认`10`
 
