@@ -1,5 +1,7 @@
 # metaG Metagenomic Analysis Tool
 
+[简体中文](./README_CN.md)
+
 ## Installation
 
 1. Clone the repository:
