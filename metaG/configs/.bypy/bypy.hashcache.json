@@ -1,4 +1,36 @@
 {
+  "/home/issas/dev/metaG/test/raws": {
+    "sub1_R1.fastq.gz": {
+      "md5": "551621e8dnaaa75cb477b52648ede2df",
+      "mtime": 1713151808,
+      "size": 1498624
+    },
+    "sub1_R2.fastq.gz": {
+      "md5": "0a51161e0sc1f28a8b47050b002eb3d2",
+      "mtime": 1713151817,
+      "size": 1571531
+    },
+    "sub2_R1.fastq.gz": {
+      "md5": "aa2284a50j84ca4f98286bb7a6ca0112",
+      "mtime": 1713151815,
+      "size": 7723930
+    },
+    "sub2_R2.fastq.gz": {
+      "md5": "4d642d0f2qc86eaa4b9daacdadb48d4d",
+      "mtime": 1713151801,
+      "size": 8046456
+    },
+    "sub3_R1.fastq.gz": {
+      "md5": "87ad53d9dhca6003b90ef83f1b1d3c8f",
+      "mtime": 1713151813,
+      "size": 6157101
+    },
+    "sub3_R2.fastq.gz": {
+      "md5": "034a6cb9et8ea612ef2c299919b7cb5a",
+      "mtime": 1713151804,
+      "size": 6412369
+    }
+  },
   "/home/issas/dev/metaG/test/test3": {
     "rawdata_table.tsv": {
       "md5": "634ac8c9fm2ef2d4b366352e0338a980",
