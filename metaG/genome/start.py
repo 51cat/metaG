@@ -5,8 +5,9 @@ from metaG.genome.genome_predict import GenomoPredict
 from metaG.genome.genome_annotation import GenomeAnnotation
 from metaG.genome.genome_count import GenomoCount
 from metaG.core.dataload import DataLoader
-
+from metaG.core.log import add_log
 from metaG.utils import get_target_dir
+
 
 @click.group()
 def main():
@@ -21,6 +22,7 @@ def main():
 @click.option('--qc_use', required=False, default ="trimmomatic")
 @click.option('--host_remove_use', required=False, default ="bwa")
 @click.option('--parallel', required=False, is_flag=True)
+@add_log
 def pre_process(rawdata_table, host, host_genome, outdir, config_file, qc_use, host_remove_use, parallel):
     runner = DataPreProcessor(
         fq_files_table=rawdata_table,
@@ -43,6 +45,7 @@ def pre_process(rawdata_table, host, host_genome, outdir, config_file, qc_use, h
 @click.option('--min_contig_len', required=False, default =500)
 @click.option('--assembly_use', required=False, default ="MEGAHIT")
 @click.option('--parallel', required=False, is_flag=True)
+@add_log
 def assembly(rawdata_table, outdir, config_file, min_contig_len,assembly_use,parallel):
     
     if rawdata_table is None:

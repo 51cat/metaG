@@ -77,7 +77,7 @@ class MinAna:
         if parallel:
             if n == 0:
                 each_ncpu = int(self.cpu/len(task_lst)) + 3
-                n_task = min(len(task_lst), 64)
+                n_task = min(len(task_lst), 32)
             else:
                 n_task = min(n, len(task_lst))
                 each_ncpu = int(self.cpu/n_task) + 3
